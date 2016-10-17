@@ -33,6 +33,7 @@ var Boot = (function (_Phaser$State) {
             game.load.image('elbow3', 'resources/assets/elbow3.png');
             game.load.spritesheet('pipe', 'resources/assets/pipesheet.png', 50, 50);
             game.load.spritesheet('pipeh', 'resources/assets/pipehsheet.png', 50, 50);
+            game.load.spritesheet('mill', 'resources/assets/watermillsheet.png', 100, 100);
         }
     }, {
         key: 'create',
@@ -77,52 +78,9 @@ var Play = (function (_Phaser$State2) {
             this.pipes = [];
             makePipes(this);
 
-            this.source;
-            this.sink;
-            this.pipe;
-            var pipe2 = undefined;
-            var pipe3 = undefined;
-            var elbow4 = undefined;
-            var elbow3 = undefined;
-            var elbow2 = undefined;
-            var elbow1 = undefined;
-            var pipe4 = undefined;
-            var cursors = undefined;
-            var pieces = undefined;
-            var connectText = undefined;
-
-            /*
-            this.source = new Source(50, 200, this);   
-            this.sink = new Sink(50, 250, this);           
-            //  Make pipe
-            this.pipe = new Pipe(10, 400, this, 'pipe');
-            pipe2 = new Pipe(650, 250, this, 'pipeh');
-            pipe3 = new Pipe(375, 200, this, 'pipe');
-              pipe4 = new Pipe(375, 375, this, 'pipeh');
-            elbow4 = new Pipe(100, 300, this, 'elbow4');
-              elbow1 = new Pipe(25, 300, this, 'elbow1');
-              elbow2 = new Pipe(200, 200, this, 'elbow2');
-              elbow3 = new Pipe(400, 400, this, 'elbow3');
-            //let pump = new Pump(50, 200, this, 'pump');
-              
-              
-            this.add.existing(this.source);  
-            this.add.existing(this.sink);
-            //this.add.existing(pump); 
-            this.add.existing(this.pipe); 
-            this.add.existing(pipe2); 
-            this.add.existing(pipe3); 
-            this.add.existing(elbow4); 
-               this.add.existing(elbow3); 
-               this.add.existing(elbow2); 
-               this.add.existing(elbow1); 
-              this.add.existing(pipe4);
-              
-            this.initEdges();
-            */
-
             this.text = this.add.text(0, 0, "are the pipes fudgin connected", { fill: "#ff0044" });
             addPipes(this);
+            this.initEdges();
         }
     }, {
         key: 'update',
@@ -163,7 +121,7 @@ var Play = (function (_Phaser$State2) {
         value: function updateConnection(obj) {
             //Loop over all objects in game to add edges to graph
             for (var i in this.g.nodes()) {
-                console.log("checking " + i + " now!");
+                //console.log("checking " + i + " now!")
                 if (intersects(obj, this.g.node(i)) && obj != this.g.node(i)) {
                     //If two pipes intersect and aren't the same pipe, make an edge
                     //console.log("setting edge between " + this.id + " and " + i);
