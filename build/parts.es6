@@ -173,12 +173,25 @@ function setConnectedToSink() {
     }        
 }
 */
-//doesn't work currently
-function animatePipes() {
-    var connectedToSource = graphlib.alg.preorder(g,"0");
-    for (var i = 1; i < connectedToSource.length; i++) {
-        var pipe = connectedToSource[i];
-        if (pipe != sink) pipe.animations.play('on');
+function animatePipes(state) {
+    let pipes = state.pipes;
+    for (var i in pipes) {
+        //I only have animation files for 2 types
+        if (pipes[i].key == 'pipe' || pipes[i].key == 'pipeh') {
+            //if connected to source
+            if (pipes[i].isConnectedSource) pipes[i].animations.play('on');
+        }
+    }
+}
+
+function stopAnimate(state) {
+    let pipes = state.pipes;
+    for (var i in pipes) {
+        //I only have animation files for 2 types
+        if (pipes[i].key == 'pipe' || pipes[i].key == 'pipeh') {
+            //if connected to source
+            pipes[i].animations.stop();
+        }
     }
 }
 

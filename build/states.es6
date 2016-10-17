@@ -96,10 +96,10 @@ class Play extends Phaser.State {
     update() {
             if ( this.pipes[0].isConnectedSink ) {
                 this.text.text = "WATER RUN";
-                this.pipes[2].animations.play('on');
+                animatePipes(this);
             } else {
                 this.text.text = "WATER NO RUN";
-                this.pipes[2].animations.stop()
+                stopAnimate(this);
             }
 
     }
