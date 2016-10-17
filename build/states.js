@@ -19,6 +19,8 @@ var Boot = (function (_Phaser$State) {
         _get(Object.getPrototypeOf(Boot.prototype), 'constructor', this).apply(this, arguments);
     }
 
+    //Gameplay state
+
     _createClass(Boot, [{
         key: 'preload',
         value: function preload() {
@@ -54,17 +56,6 @@ var Boot = (function (_Phaser$State) {
     return Boot;
 })(Phaser.State);
 
-function makePipes(pipeArray) {
-    var source = undefined;
-    var sink = undefined;
-    var pipe = undefined;
-    var pipe2 = undefined;
-    var pipe3 = undefined;
-    var elbow1 = undefined;
-}
-
-//Gameplay state
-
 var Play = (function (_Phaser$State2) {
     _inherits(Play, _Phaser$State2);
 
@@ -79,7 +70,12 @@ var Play = (function (_Phaser$State2) {
         value: function create() {
             // TODO: Replace this with really cool game code here :)   
 
-            this.pipeArray = [];
+            //make an UNDIRECTED GRAAAAAPH!!!!
+            this.g = new graphlib.Graph({ directed: false }); //{ directed: false}
+            this.pipeCount = 2; //accounts for source and sink; 0 = source, 1 = sink 
+
+            this.pipes = [];
+            makePipes(this);
 
             this.source;
             this.sink;
@@ -94,50 +90,49 @@ var Play = (function (_Phaser$State2) {
             var cursors = undefined;
             var pieces = undefined;
             var connectText = undefined;
-            //make an UNDIRECTED GRAAAAAPH!!!!
-            this.g = new graphlib.Graph({ directed: false }); //{ directed: false}
-            this.pipeCount = 2; //accounts for source and sink; 0 = source, 1 = sink
 
-            this.source = new Source(50, 200, this);
-            this.sink = new Sink(50, 250, this);
+            /*
+            this.source = new Source(50, 200, this);   
+            this.sink = new Sink(50, 250, this);           
             //  Make pipe
             this.pipe = new Pipe(10, 400, this, 'pipe');
             pipe2 = new Pipe(650, 250, this, 'pipeh');
             pipe3 = new Pipe(375, 200, this, 'pipe');
-            pipe4 = new Pipe(375, 375, this, 'pipeh');
+              pipe4 = new Pipe(375, 375, this, 'pipeh');
             elbow4 = new Pipe(100, 300, this, 'elbow4');
-            elbow1 = new Pipe(25, 300, this, 'elbow1');
-            elbow2 = new Pipe(200, 200, this, 'elbow2');
-            elbow3 = new Pipe(400, 400, this, 'elbow3');
+              elbow1 = new Pipe(25, 300, this, 'elbow1');
+              elbow2 = new Pipe(200, 200, this, 'elbow2');
+              elbow3 = new Pipe(400, 400, this, 'elbow3');
             //let pump = new Pump(50, 200, this, 'pump');
+              
+              
+            this.add.existing(this.source);  
+            this.add.existing(this.sink);
+            //this.add.existing(pump); 
+            this.add.existing(this.pipe); 
+            this.add.existing(pipe2); 
+            this.add.existing(pipe3); 
+            this.add.existing(elbow4); 
+               this.add.existing(elbow3); 
+               this.add.existing(elbow2); 
+               this.add.existing(elbow1); 
+              this.add.existing(pipe4);
+              
+            this.initEdges();
+            */
 
             this.text = this.add.text(0, 0, "are the pipes fudgin connected", { fill: "#ff0044" });
-
-            this.add.existing(this.source);
-            this.add.existing(this.sink);
-            //this.add.existing(pump);
-            this.add.existing(this.pipe);
-            this.add.existing(pipe2);
-            this.add.existing(pipe3);
-            this.add.existing(elbow4);
-            this.add.existing(elbow3);
-            this.add.existing(elbow2);
-            this.add.existing(elbow1);
-            this.add.existing(pipe4);
-
-            this.initEdges();
-
-            //  Our controls.
+            addPipes(this);
         }
     }, {
         key: 'update',
         value: function update() {
-            if (this.source.isConnectedSink) {
+            if (this.pipes[0].isConnectedSink) {
                 this.text.text = "WATER RUN";
-                this.pipe.animations.play('on');
+                this.pipes[2].animations.play('on');
             } else {
                 this.text.text = "WATER NO RUN";
-                this.pipe.animations.stop();
+                this.pipes[2].animations.stop();
             }
         }
     }, {

@@ -181,3 +181,33 @@ function animatePipes() {
         if (pipe != sink) pipe.animations.play('on');
     }
 }
+
+function makePipes(state) {
+    let pipes = state.pipes;
+    let source;
+    let sink;
+    let pipe;
+    let pipe2;
+    let pipe3;
+    let elbow1;
+    
+    pipes[0] = new Source(50, 200, state); 
+    pipes[1] = new Sink(50, 250, state);           
+    //  Make pipe
+    pipes[2] = new Pipe(10, 400, state, 'pipe');
+    pipes[3] = new Pipe(650, 250, state, 'pipeh');
+    pipes[4] = new Pipe(375, 200, state, 'pipe');
+    pipes[5] = new Pipe(375, 375, state, 'pipeh');
+    pipes[6] = new Pipe(100, 300, state, 'elbow4');
+    pipes[7] = new Pipe(25, 300, state, 'elbow1');
+    pipes[8] = new Pipe(200, 200, state, 'elbow2');
+    pipes[9] = new Pipe(400, 400, state, 'elbow3');
+}
+
+function addPipes(state) {
+    let pipes = state.pipes;
+    
+    for (var i in pipes) {
+        state.add.existing(pipes[i]);
+    }
+}

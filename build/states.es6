@@ -31,24 +31,18 @@ class Boot extends Phaser.State {
         
 }
 
-function makePipes(pipeArray) {
-    let source;
-    let sink;
-    let pipe;
-    let pipe2;
-    let pipe3;
-    let elbow1;
-    
-}
-
-
 //Gameplay state
 class Play extends Phaser.State {
 
   create() {
     // TODO: Replace this with really cool game code here :)    
-      
-    this.pipeArray = [];
+    
+    //make an UNDIRECTED GRAAAAAPH!!!!
+    this.g = new graphlib.Graph({ directed: false}); //{ directed: false}
+    this.pipeCount = 2; //accounts for source and sink; 0 = source, 1 = sink  
+    
+    this.pipes = [];
+    makePipes(this);
       
     this.source;
     this.sink;
@@ -63,10 +57,9 @@ class Play extends Phaser.State {
     let cursors;
     let pieces;
     let connectText;
-    //make an UNDIRECTED GRAAAAAPH!!!!
-    this.g = new graphlib.Graph({ directed: false}); //{ directed: false}
-    this.pipeCount = 2; //accounts for source and sink; 0 = source, 1 = sink
+
       
+    /*
     this.source = new Source(50, 200, this);   
     this.sink = new Sink(50, 250, this);           
     //  Make pipe
@@ -80,7 +73,6 @@ class Play extends Phaser.State {
       elbow3 = new Pipe(400, 400, this, 'elbow3');
     //let pump = new Pump(50, 200, this, 'pump');
       
-    this.text = this.add.text(0, 0, "are the pipes fudgin connected", {fill: "#ff0044"});
       
     this.add.existing(this.source);  
     this.add.existing(this.sink);
@@ -95,17 +87,19 @@ class Play extends Phaser.State {
       this.add.existing(pipe4);
       
     this.initEdges();
-    
-    //  Our controls.
+    */
+      
+    this.text = this.add.text(0, 0, "are the pipes fudgin connected", {fill: "#ff0044"});
+    addPipes(this);
 
   }
     update() {
-            if ( this.source.isConnectedSink ) {
+            if ( this.pipes[0].isConnectedSink ) {
                 this.text.text = "WATER RUN";
-                this.pipe.animations.play('on');
+                this.pipes[2].animations.play('on');
             } else {
                 this.text.text = "WATER NO RUN";
-                this.pipe.animations.stop()
+                this.pipes[2].animations.stop()
             }
 
     }
