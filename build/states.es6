@@ -4,11 +4,11 @@ class Boot extends Phaser.State {
     preload() {
         game.load.image('source', 'resources/assets/source.png');
         game.load.image('sink', 'resources/assets/sink.png');
-        game.load.image('pump', 'resources/assets/pump.png');
         game.load.image('elbow1', 'resources/assets/elbow1.png');
         game.load.image('elbow2', 'resources/assets/elbow2.png');
         game.load.image('elbow4', 'resources/assets/elbow4.png');
         game.load.image('elbow3', 'resources/assets/elbow3.png');
+        game.load.spritesheet('pump', 'resources/assets/pumpsheet.png', 100, 100);
         game.load.spritesheet('pipe', 'resources/assets/pipesheet.png', 50, 50);
         game.load.spritesheet('pipeh', 'resources/assets/pipehsheet.png', 50, 50);
         game.load.spritesheet('mill', 'resources/assets/watermillsheet.png', 100, 100);
@@ -17,7 +17,7 @@ class Boot extends Phaser.State {
 
 	create() {
 		let center = { x: this.game.world.centerX, y: this.game.world.centerY }
-		this.text = new RainbowText(this.game, center.x, center.y, "boot boot");
+		this.text = new RainbowText(this.game, center.x, center.y, "play play");
 		//text.anchor.set(0.5);
         //On click will switch states.
         this.text.inputEnabled = true;
@@ -36,13 +36,14 @@ class Boot extends Phaser.State {
 class Play extends Phaser.State {
 
   create() {
-    // TODO: Replace this with really cool game code here :)    
     
     //make an UNDIRECTED GRAAAAAPH!!!!
     this.g = new graphlib.Graph({ directed: false}); //{ directed: false}
     this.pipeCount = 2; //accounts for source and sink; 0 = source, 1 = sink  
     
     this.pipes = [];
+    //this holds the weird pump
+    this.pump;
     makePipes(this);
       
     this.text = this.add.text(0, 0, "are the pipes fudgin connected", {fill: "#ff0044"});

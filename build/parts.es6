@@ -28,8 +28,8 @@ class Pipe extends Phaser.Sprite {
 } 
 
 class Mill extends Phaser.Sprite {    
-    constructor (x, y, state, sprite) {
-        super(game, x, y, sprite);
+    constructor (x, y, state) {
+        super(game, x, y, 'mill');
         this.w = WIDTH*2;
         this.h = HEIGHT*2;
         this.state = state;
@@ -58,7 +58,7 @@ class Pump extends Phaser.Sprite {
         this.h = HEIGHT*2;
         this.state = state;
         
-        //this.animations.add('on', [1, 2], 10, true);
+        this.animations.add('on', [0, 1, 2, 3], 10, true);
         
         this.isConnectedSource = false;
         this.isConnectedSink = false;
@@ -111,6 +111,7 @@ function animatePipes(state) {
             if (pipes[i].isConnectedSource) pipes[i].animations.play('on');
         }
     }
+    state.pump.animations.play('on');
 }
 
 function stopAnimate(state) {
@@ -122,6 +123,7 @@ function stopAnimate(state) {
             pipes[i].animations.stop();
         }
     }
+    state.pump.animations.stop();
 }
 
 function makePipes(state) {
@@ -130,8 +132,8 @@ function makePipes(state) {
     pipes[0] = new Source(50, 200, state); 
     pipes[1] = new Sink(50, 250, state);           
     //  Make pipe
-    
-    pipes[2] = new Mill(400, 300, state, 'mill');
+
+    pipes[2] = new Mill(400, 300, state);
     pipes[3] = new Pipe(650, 250, state, 'pipeh');
     pipes[4] = new Pipe(375, 200, state, 'pipe');
     pipes[5] = new Pipe(375, 375, state, 'pipeh');
@@ -140,6 +142,7 @@ function makePipes(state) {
     pipes[8] = new Pipe(200, 200, state, 'elbow2');
     pipes[9] = new Pipe(400, 400, state, 'elbow3');
     pipes[10] = new Pipe(10, 400, state, 'pipe');
+    state.pump = new Pump(75, 200, state);
 }
 
 function addPipes(state) {
@@ -150,4 +153,5 @@ function addPipes(state) {
         state.add.existing(pipes[i]);
         state.g.setNode(''+pipes[i].id, pipes[i]);
     }
+    state.add.existing(state.pump);
 }
