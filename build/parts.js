@@ -14,7 +14,7 @@ var HEIGHT = 50;
 var Pipe = (function (_Phaser$Sprite) {
     _inherits(Pipe, _Phaser$Sprite);
 
-    function Pipe(x, y, state, sprite) {
+    function Pipe(x, y, state, sprite, draggable) {
         _classCallCheck(this, Pipe);
 
         _get(Object.getPrototypeOf(Pipe.prototype), 'constructor', this).call(this, game, x, y, sprite);
@@ -30,7 +30,7 @@ var Pipe = (function (_Phaser$Sprite) {
 
         //Drag functions
         this.inputEnabled = true;
-        this.input.enableDrag();
+        if (draggable) this.input.enableDrag();
         this.input.enableSnap(WIDTH, HEIGHT, false, true);
         this.events.onDragStop.add(state.updateConnection, state);
 
@@ -85,12 +85,20 @@ var Pump = (function (_Phaser$Sprite3) {
 
         this.animations.add('on', [0, 1, 2, 3], 10, true);
 
+        //drag resize
+        this.inputEnabled = true;
+        this.events.onDragStart.add(onDragStart, this);
+
         this.isConnectedSource = false;
         this.isConnectedSink = false;
     }
 
     return Pump;
 })(Phaser.Sprite);
+
+function onDragStart(sprite, pointer) {
+    console.log(pointer.x);
+}
 
 var Source = (function (_Phaser$Sprite4) {
     _inherits(Source, _Phaser$Sprite4);
@@ -142,6 +150,10 @@ var Sink = (function (_Phaser$Sprite5) {
     return Sink;
 })(Phaser.Sprite);
 
+function setCurrent() {
+    //Dictates how fast the wheel spinss
+}
+
 function animatePipes(state) {
     var pipes = state.pipes;
     for (var i in pipes) {
@@ -161,6 +173,8 @@ function stopAnimate(state) {
         if (pipes[i].key == 'pipe' || pipes[i].key == 'pipeh' || pipes[i].key == 'mill') {
             //if connected to source
             pipes[i].animations.stop();
+            //Sets to no water marks
+            pipes[i].frame = 0;
         }
     }
     state.pump.animations.stop();
@@ -174,14 +188,25 @@ function makePipes(state) {
     //  Make pipe
 
     pipes[2] = new Mill(400, 300, state);
-    pipes[3] = new Pipe(650, 250, state, 'pipeh');
-    pipes[4] = new Pipe(375, 200, state, 'pipe');
-    pipes[5] = new Pipe(375, 375, state, 'pipeh');
-    pipes[6] = new Pipe(100, 300, state, 'elbow4');
-    pipes[7] = new Pipe(25, 300, state, 'elbow1');
-    pipes[8] = new Pipe(200, 200, state, 'elbow2');
-    pipes[9] = new Pipe(400, 400, state, 'elbow3');
-    pipes[10] = new Pipe(10, 400, state, 'pipe');
+    pipes[3] = new Pipe(100, 300, state, 'elbow4', false);
+    pipes[4] = new Pipe(150, 300, state, 'pipeh', false);
+    pipes[5] = new Pipe(200, 300, state, 'pipeh', false);
+    pipes[6] = new Pipe(250, 300, state, 'elbow3', false);
+    pipes[7] = new Pipe(250, 150, state, 'elbow2', false);
+    pipes[8] = new Pipe(100, 150, state, 'elbow1', false);
+    pipes[9] = new Pipe(200, 150, state, 'pipeh', false);
+    pipes[10] = new Pipe(150, 150, state, 'pipeh', false);
+
+    /*
+    pipes[3] = new Pipe(150, 300, state, 'pipeh', false);
+    pipes[4] = new Pipe(375, 200, state, 'pipe', false);
+    pipes[5] = new Pipe(200, 300, state, 'pipeh', false);
+    pipes[6] = new Pipe(100, 300, state, 'elbow4', false);
+    pipes[7] = new Pipe(25, 300, state, 'elbow1', false);
+    pipes[8] = new Pipe(250, 200, state, 'elbow2', false);
+    pipes[9] = new Pipe(400, 400, state, 'elbow3', false);
+    pipes[10] = new Pipe(10, 400, state, 'pipe', false);
+    */
     state.pump = new Pump(75, 200, state);
 }
 
