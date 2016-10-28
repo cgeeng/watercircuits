@@ -63,6 +63,8 @@ var Boot = (function (_Phaser$State) {
         value: function start() {
             console.log("start of Play state");
             this.text.destroy();
+            //so I can get left and right
+            game.input.mouse.capture = true;
             game.state.start('Play');
         }
     }]);

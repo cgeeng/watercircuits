@@ -88,7 +88,9 @@ var Pump = (function (_Phaser$Sprite3) {
 
         //drag resize
         this.inputEnabled = true;
-        this.events.onDragStart.add(onDragStart, this);
+        this.events.onInputDown.add(changeVoltage, this);
+
+        this.anchor.setTo(0.5, 0.5);
 
         this.isConnectedSource = false;
         this.isConnectedSink = false;
@@ -129,8 +131,15 @@ var Resistor = (function (_Phaser$Sprite4) {
     return Resistor;
 })(Phaser.Sprite);
 
-function onDragStart(sprite, pointer) {
-    console.log(pointer.x);
+function changeVoltage(sprite, pointer) {
+    //console.log(pointer.activePointer.leftButton.isDown);
+
+    //if (pointer.leftButton.isDown) {
+    sprite.scale.setTo(sprite.scale.x + 0.1, sprite.scale.y + 0.1);
+    //} else sprite.scale.setTo(sprite.scale.x - 0.1, sprite.scale.y - 0.1);
+    var mill = this.state.pipes[2];
+    mill.maxSpeed += 5;
+    if (mill.animations.currentAnim != null) mill.animations.currentAnim.speed += 5;
 }
 
 var Source = (function (_Phaser$Sprite5) {
@@ -279,7 +288,7 @@ function makePipes(state) {
 
     //pipes.push(new Resistor(50, 425, state, 'resistor', 30));
 
-    state.pump = new Pump(startx + 25, starty, state);
+    state.pump = new Pump(startx + 75, starty + 50, state);
 }
 
 function addPipes(state) {
