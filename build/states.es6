@@ -76,6 +76,7 @@ class Play extends Phaser.State {
         //CIRCUIT OVERLAY
     this.circuitButton = this.add.sprite(546,455,'circuitButton')
     this.circuitButton.inputEnabled = true;
+    this.circuitButton.input.useHandCursor = true;
     this.circuitButton.events.onInputDown.add(this.toggleCircuit, this);
     this.white = this.add.sprite(0,0,'white'); 
     this.circuit = this.add.sprite(0,0,'circuit');
@@ -113,7 +114,9 @@ toggleCircuit() {
 }
     
 setToolbox() {
-    addToState(this, new Pipe(40, 425, this, 'pipeh', true));
+    let draggable = new Pipe(40, 425, this, 'pipeh', true);
+    draggable.input.useHandCursor = true;
+    addToState(this, draggable);
     addToState(this, new Resistor(140, 425, this, 'resistor', 30));
     addToState(this, new Resistor(300, 425, this, 'resistor2', 35));
 }
