@@ -18,7 +18,7 @@ class Pipe extends Phaser.Sprite {
         //Drag functions
         this.inputEnabled = true;
         if (draggable) this.input.enableDrag();
-        this.input.enableSnap(WIDTH, HEIGHT, false, true);
+        this.input.enableSnap(WIDTH/2, HEIGHT/2, false, true);
         this.events.onDragStop.add(state.updateConnection, state);
         
         //Keep pipe count
@@ -35,7 +35,7 @@ class Mill extends Phaser.Sprite {
         this.state = state;
         this.maxSpeed = 40;
         
-        this.animations.add('on', [0, 1, 2, 3], this.maxSpeed, true);
+        this.animations.add('on', [1, 2, 3, 4,5,6,7], this.maxSpeed, true);
         
         this.isConnectedSource = false;
         this.isConnectedSink = false;
@@ -86,7 +86,7 @@ class Resistor extends Phaser.Sprite {
         //Drag functions
         this.inputEnabled = true;
         this.input.enableDrag();
-        this.input.enableSnap(WIDTH, HEIGHT, false, true);
+        this.input.enableSnap(WIDTH/2, HEIGHT/2, false, true);
         this.events.onDragStop.add(state.updateConnection, state);
         
         //Keep pipe count
@@ -144,9 +144,9 @@ function checkResistance(state) {
 
     for (let i in circuit) {
         let k = circuit[i];
-        if (pipes[k].key == 'resistor') resistance = pipes[k].resistance;
+        if (pipes[k].resistance != null) resistance = pipes[k].resistance;
     }
-    console.log(resistance);
+    //console.log(resistance);
     return resistance;
     
 }
@@ -164,7 +164,7 @@ function animatePipes(state) {
     setCurrent(state, resistance);
     for (var i in pipes) {
         //I only have animation files for 2 types
-        if (pipes[i].key == 'pipe' || pipes[i].key == 'pipeh' || pipes[i].key == 'mill' || pipes[i].key == 'resistor') {
+        if (pipes[i].animations.getAnimation('on') != null) {
             //if connected to source
             if (pipes[i].isConnectedSource) pipes[i].animations.play('on');
         }
@@ -188,24 +188,38 @@ function stopAnimate(state) {
 
 function makePipes(state) {
     let pipes = state.pipes;
+    let startx = 50;
+    let starty = 225;
     
-    pipes[0] = new Source(50, 200, state); 
-    pipes[1] = new Sink(50, 250, state);           
+    pipes[0] = new Source(startx, starty, state); 
+    pipes[1] = new Sink(startx, starty+50, state);           
     //  Make pipe
 
-    pipes[2] = new Mill(400, 300, state);
-    pipes[3] = new Pipe(100, 300, state, 'elbow4', false);
-    pipes[4] = new Pipe(150, 300, state, 'pipeh', false);
-    pipes[5] = new Pipe(200, 400, state, 'pipeh', true);
-    pipes[6] = new Pipe(250, 300, state, 'elbow3', false);
-    pipes[7] = new Pipe(250, 150, state, 'elbow2', false);
-    pipes[8] = new Pipe(100, 150, state, 'elbow1', false);
-    pipes[9] = new Pipe(200, 150, state, 'pipeh', false);
-    pipes[10] = new Pipe(150, 150, state, 'pipeh', false);
-    pipes[11] = new Resistor(50, 50, state, 'resistor', 30);
+    pipes[2] = new Mill(startx+375, starty, state);
+    pipes.push(new Pipe(startx+50, starty+100, state, 'elbow4', false));
+    pipes.push(new Pipe(startx+100, starty+100, state, 'pipeh', false));    
+    pipes.push(new Pipe(startx+150, starty+100, state, 'pipeh', false));
+    pipes.push(new Pipe(startx+200, starty+100, state, 'pipeh', false));
+    pipes.push(new Pipe(startx+250, starty+100, state, 'pipeh', false));
+    pipes.push(new Pipe(startx+300, starty+100, state, 'pipeh', false));
+    pipes.push(new Pipe(startx+350, starty+100, state, 'pipeh', false));
+    pipes.push(new Pipe(startx+400, starty+100, state, 'pipeh', false));
+    
+    pipes.push(new Pipe(startx+450, starty+100, state, 'elbow3', false));
+    pipes.push(new Pipe(startx+400, starty-50, state, 'elbow2', false));
+    pipes.push(new Pipe(startx+50, starty-50, state, 'elbow1', false));
+    
+    pipes.push(new Pipe(startx+150, starty-50, state, 'pipeh', false));
+    pipes.push(new Pipe(startx+100, starty-50, state, 'pipeh', false));
+    //pipes.push(new Pipe(startx+200, starty-50, state, 'pipeh', false));
+    pipes.push(new Pipe(startx+250, starty-50, state, 'pipeh', false));
+    pipes.push(new Pipe(startx+300, starty-50, state, 'pipeh', false));
+    pipes.push(new Pipe(startx+350, starty-50, state, 'pipeh', false));
+    
+    //pipes.push(new Resistor(50, 425, state, 'resistor', 30));
 
     
-    state.pump = new Pump(75, 200, state);
+    state.pump = new Pump(startx+25, starty, state);
 }
 
 function addPipes(state) {
@@ -217,4 +231,10 @@ function addPipes(state) {
         state.g.setNode(''+pipes[i].id, pipes[i]);
     }
     state.add.existing(state.pump);
+}
+
+function addToState(state, thing) {
+    state.pipes.push(thing);
+    state.add.existing(thing);
+    state.g.setNode(''+thing.id, thing);
 }

@@ -13,6 +13,11 @@ class Boot extends Phaser.State {
         game.load.spritesheet('pipeh', 'resources/assets/pipehsheet.png', WIDTH, HEIGHT);
         game.load.spritesheet('mill', 'resources/assets/watermillsheet.png', 100, 100);
         game.load.spritesheet('resistor', 'resources/assets/resistorsheet.png', WIDTH, HEIGHT);
+        game.load.spritesheet('resistor2', 'resources/assets/resistor2sheet.png', WIDTH, HEIGHT);
+        
+        game.load.image('sky', 'resources/assets/bg/sky.png');
+        game.load.image('overlay', 'resources/assets/ui/overlay.png');
+        game.load.image('robot', 'resources/assets/bg/robot.png');
         
     }
 
@@ -37,7 +42,9 @@ class Boot extends Phaser.State {
 class Play extends Phaser.State {
 
   create() {
-    
+    this.add.sprite(0,0,'sky');
+    this.add.sprite(0,0,'overlay');
+    this.add.sprite(0,0,'robot');
     //make an UNDIRECTED GRAAAAAPH!!!!
     this.g = new graphlib.Graph({ directed: false}); //{ directed: false}
     this.pipeCount = 2; //accounts for source and sink; 0 = source, 1 = sink  
@@ -49,6 +56,7 @@ class Play extends Phaser.State {
       
     this.text = this.add.text(0, 0, "are the pipes fudgin connected", {fill: "#ff0044"});
     addPipes(this);
+    this.setToolbox();
     this.initEdges();
 
   }
@@ -63,6 +71,11 @@ class Play extends Phaser.State {
 
     }
     
+setToolbox() {
+    addToState(this, new Pipe(40, 425, this, 'pipeh', true));
+    addToState(this, new Resistor(140, 425, this, 'resistor', 30));
+    addToState(this, new Resistor(300, 425, this, 'resistor2', 35));
+}
 
 initEdges() {    
     //console.log(this.g.nodes());
