@@ -59,7 +59,7 @@ class Pump extends Phaser.Sprite {
         this.h = HEIGHT*2;
         this.state = state;
         
-        this.animations.add('on', [0, 1, 2, 3], 10, true);
+        this.animations.add('on', [1, 2, 3, 4], 10, true);
         
         //drag resize
         this.inputEnabled = true;
@@ -163,8 +163,8 @@ function animatePipes(state) {
     let resistance = checkResistance(state);
     setCurrent(state, resistance);
     for (var i in pipes) {
-        //I only have animation files for 2 types
-        if (pipes[i].animations.getAnimation('on') != null) {
+        //I only have animation files for 2 types, i gotta fix this shit up lol
+        if (pipes[i].key == 'pipe' || pipes[i].key == 'pipeh' || pipes[i].key == 'mill'|| pipes[i].key == 'resistor' || pipes[i].key == 'resistor2') {
             //if connected to source
             if (pipes[i].isConnectedSource) pipes[i].animations.play('on');
         }
@@ -176,7 +176,7 @@ function stopAnimate(state) {
     let pipes = state.pipes;
     for (var i in pipes) {
         //I only have animation files for 2 types
-        if (pipes[i].key == 'pipe' || pipes[i].key == 'pipeh' || pipes[i].key == 'mill'|| pipes[i].key == 'resistor') {
+        if (pipes[i].key == 'pipe' || pipes[i].key == 'pipeh' || pipes[i].key == 'mill'|| pipes[i].key == 'resistor'|| pipes[i].key == 'resistor2') {
             //if connected to source
             pipes[i].animations.stop();
             //Sets to no water marks
