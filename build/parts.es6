@@ -171,6 +171,7 @@ function animatePipes(state) {
     }
     state.pump.animations.play('on');
     
+    //Animate robot shit
     if ( resistance == 0) {
         state.robot.animations.play('die')
     } else if (resistance > 33) {

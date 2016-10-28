@@ -21,6 +21,10 @@ class Boot extends Phaser.State {
         
         game.load.spritesheet('robot1', 'resources/assets/robot1sheet.png', 700, 500);
         
+        game.load.image('white', 'resources/assets/ui/white.png');
+        game.load.image('circuit', 'resources/assets/ui/circuit.png');
+        game.load.spritesheet('circuitButton', 'resources/assets/ui/buttonsheet.png', 700, 500);
+        
     }
 
 	create() {
@@ -46,14 +50,14 @@ class Play extends Phaser.State {
   create() {
     this.add.sprite(0,0,'sky');
     this.add.sprite(0,0,'overlay');
-    this.robot = this.add.sprite(0,0,'robot1');
     
+    //ROBOT STUFF
+    this.robot = this.add.sprite(0,0,'robot1'); 
     this.robot.animations.add('turningOn', [1,2,3,4,5, 6], 10, false); 
     this.robot.animations.add('on', [5, 6], 20, true);  
-    this.robot.animations.add('die', [7,8], 10, false); 
-      
-    this.didRobotRun = false;
-      
+    this.robot.animations.add('die', [7,8], 10, false);       
+    this.didRobotRun = false;      
+
     //make an UNDIRECTED GRAAAAAPH!!!!
     this.g = new graphlib.Graph({ directed: false}); //{ directed: false}
     this.pipeCount = 2; //accounts for source and sink; 0 = source, 1 = sink  
@@ -67,6 +71,15 @@ class Play extends Phaser.State {
     addPipes(this);
     this.setToolbox();
     this.initEdges();
+      
+        //CIRCUIT OVERLAY
+    this.circuitButton = this.add.sprite(0,0,'circuitButton')
+    this.circuitButton.inputEnabled = true;
+    this.circuitButton.events.onInputDown.add(this.toggleCircuit, this);
+    this.white = this.add.sprite(0,0,'white'); 
+    this.circuit = this.add.sprite(0,0,'circuit');
+    this.white.alpha = 0;
+    this.circuit.alpha = 0;
 
   }
     update() {
@@ -79,6 +92,20 @@ class Play extends Phaser.State {
             }
 
     }
+
+toggleCircuit() {
+    
+    if (this.circuit.alpha != 1) {
+        this.white.alpha = 0.8;
+        this.circuit.alpha = 1;
+        this.circuitButton.frame = 1;
+    } else {
+        this.white.alpha = 0;
+        this.circuit.alpha = 0;
+        this.circuitButton.frame = 0;
+    }
+        
+}
     
 setToolbox() {
     addToState(this, new Pipe(40, 425, this, 'pipeh', true));
