@@ -85,6 +85,7 @@ class Resistor extends Phaser.Sprite {
         
         //Drag functions
         this.inputEnabled = true;
+        this.input.useHandCursor = true;
         this.input.enableDrag();
         this.input.enableSnap(WIDTH/2, HEIGHT/2, false, true);
         this.events.onDragStop.add(state.updateConnection, state);
