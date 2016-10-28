@@ -31,9 +31,10 @@ var Boot = (function (_Phaser$State) {
             game.load.image('elbow4', 'resources/assets/elbow4.png');
             game.load.image('elbow3', 'resources/assets/elbow3.png');
             game.load.spritesheet('pump', 'resources/assets/pumpsheet.png', 100, 100);
-            game.load.spritesheet('pipe', 'resources/assets/pipesheet.png', 50, 50);
-            game.load.spritesheet('pipeh', 'resources/assets/pipehsheet.png', 50, 50);
+            game.load.spritesheet('pipe', 'resources/assets/pipesheet.png', WIDTH, HEIGHT);
+            game.load.spritesheet('pipeh', 'resources/assets/pipehsheet.png', WIDTH, HEIGHT);
             game.load.spritesheet('mill', 'resources/assets/watermillsheet.png', 100, 100);
+            game.load.spritesheet('resistor', 'resources/assets/resistorsheet.png', WIDTH, HEIGHT);
         }
     }, {
         key: 'create',
@@ -133,7 +134,7 @@ var Play = (function (_Phaser$State2) {
                     //console.log("removing edge between " + this.id + " and " + i);
                 }
             }
-            console.log(graphlib.alg.preorder(this.g, "0"));
+            //console.log(graphlib.alg.preorder(this.g,"0"));
             //console.log(this.g.edges());
             this.setConnectedToSource();
             this.setConnectedToSink();
