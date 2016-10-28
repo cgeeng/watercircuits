@@ -19,6 +19,8 @@ class Boot extends Phaser.State {
         game.load.image('overlay', 'resources/assets/ui/overlay.png');
         game.load.image('robot', 'resources/assets/bg/robot.png');
         
+        game.load.spritesheet('robot1', 'resources/assets/robot1sheet.png', 700, 500);
+        
     }
 
 	create() {
@@ -44,7 +46,14 @@ class Play extends Phaser.State {
   create() {
     this.add.sprite(0,0,'sky');
     this.add.sprite(0,0,'overlay');
-    this.add.sprite(0,0,'robot');
+    this.robot = this.add.sprite(0,0,'robot1');
+    
+    this.robot.animations.add('turningOn', [1,2,3,4,5, 6], 10, false); 
+    this.robot.animations.add('on', [5, 6], 20, true);  
+    this.robot.animations.add('die', [7,8], 10, false); 
+      
+    this.didRobotRun = false;
+      
     //make an UNDIRECTED GRAAAAAPH!!!!
     this.g = new graphlib.Graph({ directed: false}); //{ directed: false}
     this.pipeCount = 2; //accounts for source and sink; 0 = source, 1 = sink  

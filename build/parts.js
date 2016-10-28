@@ -215,6 +215,17 @@ function animatePipes(state) {
         }
     }
     state.pump.animations.play('on');
+
+    if (resistance == 0) {
+        state.robot.animations.play('die');
+    } else if (resistance > 33) {
+        state.robot.animations.play('turningOn');
+        console.log(10 - resistance / 5);
+        state.robot.animations.currentAnim.speed = 10 - resistance / 5;
+    } else {
+        state.robot.animations.play('turningOn');
+        state.robot.animations.currentAnim.speed = 10;
+    }
 }
 
 function stopAnimate(state) {
@@ -229,6 +240,9 @@ function stopAnimate(state) {
         }
     }
     state.pump.animations.stop();
+    state.robot.animations.stop();
+    state.robot.frame = 0;
+    state.didRobotRun = false;
 }
 
 function makePipes(state) {
