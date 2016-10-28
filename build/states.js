@@ -45,7 +45,8 @@ var Boot = (function (_Phaser$State) {
 
             game.load.image('white', 'resources/assets/ui/white.png');
             game.load.image('circuit', 'resources/assets/ui/circuit.png');
-            game.load.spritesheet('circuitButton', 'resources/assets/ui/buttonsheet.png', 700, 500);
+            game.load.image('math', 'resources/assets/ui/math.png');
+            game.load.spritesheet('circuitButton', 'resources/assets/ui/buttonsheet.png', 117, 45);
         }
     }, {
         key: 'create',
@@ -106,13 +107,15 @@ var Play = (function (_Phaser$State2) {
             this.initEdges();
 
             //CIRCUIT OVERLAY
-            this.circuitButton = this.add.sprite(0, 0, 'circuitButton');
+            this.circuitButton = this.add.sprite(546, 455, 'circuitButton');
             this.circuitButton.inputEnabled = true;
             this.circuitButton.events.onInputDown.add(this.toggleCircuit, this);
             this.white = this.add.sprite(0, 0, 'white');
             this.circuit = this.add.sprite(0, 0, 'circuit');
+            this.math = this.add.sprite(0, 0, 'math');
             this.white.alpha = 0;
             this.circuit.alpha = 0;
+            this.math.alpha = 0;
         }
     }, {
         key: 'update',
@@ -132,11 +135,13 @@ var Play = (function (_Phaser$State2) {
             if (this.circuit.alpha != 1) {
                 this.white.alpha = 0.8;
                 this.circuit.alpha = 1;
+                this.math.alpha = 1;
                 this.circuitButton.frame = 1;
             } else {
                 this.white.alpha = 0;
                 this.circuit.alpha = 0;
                 this.circuitButton.frame = 0;
+                this.math.alpha = 0;
             }
         }
     }, {
