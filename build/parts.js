@@ -178,21 +178,37 @@ var Sink = (function (_Phaser$Sprite6) {
         //state.g.setNode("1", this);
     }
 
-    //END CLASSES
-
     return Sink;
 })(Phaser.Sprite);
 
+var Robot = (function (_Phaser$Sprite7) {
+    _inherits(Robot, _Phaser$Sprite7);
+
+    function Robot(x, y, state) {
+        _classCallCheck(this, Robot);
+
+        _get(Object.getPrototypeOf(Robot.prototype), 'constructor', this).call(this, game, x, y, 'robot1');
+        this.maxCurrent = 30;
+
+        this.animations.add('turningOn', [1, 2, 3, 4, 5, 6], 10, false);
+        this.animations.add('on', [5, 6], 20, true);
+        this.animations.add('die', [7, 8], 10, false);
+    }
+
+    //END CLASSES
+
+    return Robot;
+})(Phaser.Sprite);
+
 function changeVoltage(sprite, pointer) {
-    console.log(pointer.button);
 
     if (pointer.button == 0) {
         //left click
         sprite.scale.setTo(sprite.scale.x + 0.1, sprite.scale.y + 0.1);
-        sprite.voltage += 5;
+        sprite.voltage += 3;
     } else {
         sprite.scale.setTo(sprite.scale.x - 0.1, sprite.scale.y - 0.1);
-        sprite.voltage -= 5;
+        sprite.voltage -= 3;
     }
 }
 
@@ -214,13 +230,16 @@ function setCurrent(state, resistance) {
     //Dictates how fast the wheel spinss
     var pipes = state.pipes;
     pipes[2].animations.currentAnim.speed = state.pump.voltage - resistance;
+    return state.pump.voltage - resistance;
 }
 
 function animatePipes(state) {
     var pipes = state.pipes;
+    var robot = state.robot;
     //Check if resistor in circuit
     var resistance = checkResistance(state);
-    setCurrent(state, resistance);
+    var current = setCurrent(state, resistance);
+    console.log(current);
     for (var i in pipes) {
         //I only have animation files for 2 types, i gotta fix this shit up lol
         if (pipes[i].key == 'pipe' || pipes[i].key == 'pipeh' || pipes[i].key == 'mill' || pipes[i].key == 'resistor' || pipes[i].key == 'resistor2') {
@@ -231,12 +250,11 @@ function animatePipes(state) {
     state.pump.animations.play('on');
 
     //Animate robot shit
-    if (resistance == 0) {
+    if (current > robot.maxCurrent) {
         state.robot.animations.play('die');
-    } else if (resistance > 33) {
+    } else if (current <= robot.maxCurrent) {
         state.robot.animations.play('turningOn');
-        console.log(10 - resistance / 5);
-        state.robot.animations.currentAnim.speed = 10 - resistance / 5;
+        state.robot.animations.currentAnim.speed = current;
     } else {
         state.robot.animations.play('turningOn');
         state.robot.animations.currentAnim.speed = 10;
@@ -257,7 +275,6 @@ function stopAnimate(state) {
     state.pump.animations.stop();
     state.robot.animations.stop();
     state.robot.frame = 0;
-    state.didRobotRun = false;
 }
 
 function makePipes(state) {

@@ -92,12 +92,8 @@ var Play = (function (_Phaser$State2) {
             this.add.sprite(0, 0, 'overlay');
 
             //ROBOT STUFF
-            this.robot = this.add.sprite(0, 0, 'robot1');
-            this.robot.animations.add('turningOn', [1, 2, 3, 4, 5, 6], 10, false);
-            this.robot.animations.add('on', [5, 6], 20, true);
-            this.robot.animations.add('die', [7, 8], 10, false);
-            this.didRobotRun = false;
-
+            this.robot = new Robot(0, 0, this);
+            this.add.existing(this.robot);
             //make an UNDIRECTED GRAAAAAPH!!!!
             this.g = new graphlib.Graph({ directed: false }); //{ directed: false}
             this.pipeCount = 2; //accounts for source and sink; 0 = source, 1 = sink 
