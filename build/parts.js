@@ -52,7 +52,7 @@ var Mill = (function (_Phaser$Sprite2) {
         this.w = WIDTH * 2;
         this.h = HEIGHT * 2;
         this.state = state;
-        this.maxSpeed = 40;
+        this.maxSpeed = this.state.pump.voltage;
 
         this.animations.add('on', [1, 2, 3, 4, 5, 6, 7], this.maxSpeed, true);
 
@@ -82,12 +82,14 @@ var Pump = (function (_Phaser$Sprite3) {
         _get(Object.getPrototypeOf(Pump.prototype), 'constructor', this).call(this, game, x, y, 'pump');
         this.w = WIDTH * 2;
         this.h = HEIGHT * 2;
+        this.voltage = 40;
         this.state = state;
 
         this.animations.add('on', [1, 2, 3, 4], 10, true);
 
         //drag resize
         this.inputEnabled = true;
+        this.input.useHandCursor = true;
         this.events.onInputDown.add(changeVoltage, this);
 
         this.anchor.setTo(0.5, 0.5);
@@ -131,17 +133,6 @@ var Resistor = (function (_Phaser$Sprite4) {
     return Resistor;
 })(Phaser.Sprite);
 
-function changeVoltage(sprite, pointer) {
-    //console.log(pointer.activePointer.leftButton.isDown);
-
-    //if (pointer.leftButton.isDown) {
-    sprite.scale.setTo(sprite.scale.x + 0.1, sprite.scale.y + 0.1);
-    //} else sprite.scale.setTo(sprite.scale.x - 0.1, sprite.scale.y - 0.1);
-    var mill = this.state.pipes[2];
-    mill.maxSpeed += 5;
-    if (mill.animations.currentAnim != null) mill.animations.currentAnim.speed += 5;
-}
-
 var Source = (function (_Phaser$Sprite5) {
     _inherits(Source, _Phaser$Sprite5);
 
@@ -149,7 +140,7 @@ var Source = (function (_Phaser$Sprite5) {
         _classCallCheck(this, Source);
 
         _get(Object.getPrototypeOf(Source.prototype), 'constructor', this).call(this, game, x, y, 'source');
-        this.w = WIDTH * 2;
+        this.w = WIDTH;
         this.h = HEIGHT;
         this.isConnectedSource = true;
         this.isConnectedSink = false;
@@ -173,7 +164,7 @@ var Sink = (function (_Phaser$Sprite6) {
         _classCallCheck(this, Sink);
 
         _get(Object.getPrototypeOf(Sink.prototype), 'constructor', this).call(this, game, x, y, 'sink');
-        this.w = WIDTH * 2;
+        this.w = WIDTH;
         this.h = HEIGHT;
         this.isConnectedSource = false;
         this.isConnectedSink = true;
@@ -192,6 +183,19 @@ var Sink = (function (_Phaser$Sprite6) {
     return Sink;
 })(Phaser.Sprite);
 
+function changeVoltage(sprite, pointer) {
+    console.log(pointer.button);
+
+    if (pointer.button == 0) {
+        //left click
+        sprite.scale.setTo(sprite.scale.x + 0.1, sprite.scale.y + 0.1);
+        sprite.voltage += 5;
+    } else {
+        sprite.scale.setTo(sprite.scale.x - 0.1, sprite.scale.y - 0.1);
+        sprite.voltage -= 5;
+    }
+}
+
 function checkResistance(state) {
     //If pipes connected, check if resistor is in circuit
     var pipes = state.pipes;
@@ -209,7 +213,7 @@ function checkResistance(state) {
 function setCurrent(state, resistance) {
     //Dictates how fast the wheel spinss
     var pipes = state.pipes;
-    pipes[2].animations.currentAnim.speed = pipes[2].maxSpeed - resistance;
+    pipes[2].animations.currentAnim.speed = state.pump.voltage - resistance;
 }
 
 function animatePipes(state) {
@@ -261,8 +265,9 @@ function makePipes(state) {
     var startx = 50;
     var starty = 225;
 
-    pipes[0] = new Source(startx, starty, state);
-    pipes[1] = new Sink(startx, starty + 50, state);
+    pipes[0] = new Source(startx + 25, starty, state);
+    pipes[1] = new Sink(startx + 25, starty + 50, state);
+    state.pump = new Pump(startx + 75, starty + 50, state);
     //  Make pipe
 
     pipes[2] = new Mill(startx + 375, starty, state);
@@ -287,8 +292,6 @@ function makePipes(state) {
     pipes.push(new Pipe(startx + 350, starty - 50, state, 'pipeh', false));
 
     //pipes.push(new Resistor(50, 425, state, 'resistor', 30));
-
-    state.pump = new Pump(startx + 75, starty + 50, state);
 }
 
 function addPipes(state) {

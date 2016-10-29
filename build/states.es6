@@ -51,6 +51,8 @@ class Boot extends Phaser.State {
 class Play extends Phaser.State {
 
   create() {
+      //prevents popup on right click
+    game.canvas.oncontextmenu = function (e) { e.preventDefault(); }
     this.add.sprite(0,0,'sky');
     this.add.sprite(0,0,'overlay');
     

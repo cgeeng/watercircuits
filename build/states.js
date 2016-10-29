@@ -84,6 +84,10 @@ var Play = (function (_Phaser$State2) {
     _createClass(Play, [{
         key: 'create',
         value: function create() {
+            //prevents popup on right click
+            game.canvas.oncontextmenu = function (e) {
+                e.preventDefault();
+            };
             this.add.sprite(0, 0, 'sky');
             this.add.sprite(0, 0, 'overlay');
 

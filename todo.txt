@@ -1,27 +1,14 @@
 to-do list
 
-
-    HOW WE GONNA GOOOOOOOOOOOOOOOOOOoooooooooooooooooooo
+    -concreteness fading
     
-    -Allow user to click to drag and move a sprite CHECK
-    -Set up es6
-    -Set up pipe, source, sink class??
-    -check for overlaps
-    -trigger checking neighbors whenever dragging something
-    -Set up search to check nodes connected to source,sink        
-    -check individual pipe if its connected to either
-    -if source connected to sink, turn on animations
-    -if individual pipe is connected to both source and sink, run animation
-    -If two sprites collide, snap them together
-    -fix arguments for connection functions to include states
-    DOOOOOOOOOOOOOONEEEEEE EYOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO  
-    
-
-    
-    -add animations
-    -implement water mill running
-    -pipes into array
-    -resize pump
+    -More cleanly check for correct current
+    -Introduce metaphor first and then have the robot?
+    -make robot states clearer
+    -make pump smaller
+    -make interactable thingsmore clear
+    -have a funnel/something more clear showing the mill is connected to the pipes
+    -set speed of water in all pipes?
 
 
     
