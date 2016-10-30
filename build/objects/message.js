@@ -10,43 +10,43 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var RainbowText = (function (_Phaser$Text) {
-		_inherits(RainbowText, _Phaser$Text);
+	_inherits(RainbowText, _Phaser$Text);
 
-		function RainbowText(game, x, y, text) {
-				_classCallCheck(this, RainbowText);
+	function RainbowText(game, x, y, text) {
+		_classCallCheck(this, RainbowText);
 
-				_get(Object.getPrototypeOf(RainbowText.prototype), "constructor", this).call(this, game, x, y, text, { font: "45px Arial", fill: "#ff0044", align: "center" });
+		_get(Object.getPrototypeOf(RainbowText.prototype), "constructor", this).call(this, game, x, y, text, { font: "45px Arial", fill: "#ff0044", align: "center" });
 
-				this._speed = 125; //ms
-				this._colorIndex = 0;
-				this._colors = ['#ee4035', '#f37736', '#fdf498', '#7bc043', '#0392cf'];
+		this._speed = 125; //ms
+		this._colorIndex = 0;
+		this._colors = ['#ee4035', '#f37736', '#fdf498', '#7bc043', '#0392cf'];
 
-				this.colorize();
-				this.startTimer();
+		this.colorize();
+		this.startTimer();
 
-				this.game.stage.addChild(this);
+		this.game.stage.addChild(this);
+	}
+
+	_createClass(RainbowText, [{
+		key: "startTimer",
+		value: function startTimer() {
+			this.game.time.events.loop(this._speed, this.colorize, this).timer.start();
 		}
+	}, {
+		key: "colorize",
+		value: function colorize() {
 
-		_createClass(RainbowText, [{
-				key: "startTimer",
-				value: function startTimer() {
-						this.game.time.events.loop(this._speed, this.colorize, this).timer.start();
+			for (var i = 0; i < this.text.length; i++) {
+
+				if (this._colorIndex === this._colors.length) {
+					this._colorIndex = 0;
 				}
-		}, {
-				key: "colorize",
-				value: function colorize() {
 
-						for (var i = 0; i < this.text.length; i++) {
+				this.addColor(this._colors[this._colorIndex], i);
+				this._colorIndex++;
+			}
+		}
+	}]);
 
-								if (this._colorIndex === this._colors.length) {
-										this._colorIndex = 0;
-								}
-
-								this.addColor(this._colors[this._colorIndex], i);
-								this._colorIndex++;
-						}
-				}
-		}]);
-
-		return RainbowText;
+	return RainbowText;
 })(Phaser.Text);

@@ -229,7 +229,7 @@ function checkResistance(state) {
 function setCurrent(state, resistance) {
     //Dictates how fast the wheel spinss
     var pipes = state.pipes;
-    pipes[2].animations.currentAnim.speed = state.pump.voltage - resistance;
+    state.mill.animations.currentAnim.speed = state.pump.voltage - resistance;
     return state.pump.voltage - resistance;
 }
 
@@ -249,15 +249,17 @@ function animatePipes(state) {
     }
     state.pump.animations.play('on');
 
-    //Animate robot shit
-    if (current > robot.maxCurrent) {
-        state.robot.animations.play('die');
-    } else if (current <= robot.maxCurrent) {
-        state.robot.animations.play('turningOn');
-        state.robot.animations.currentAnim.speed = current;
-    } else {
-        state.robot.animations.play('turningOn');
-        state.robot.animations.currentAnim.speed = 10;
+    if (robot != null) {
+        //Animate robot shit
+        if (current > robot.maxCurrent) {
+            state.robot.animations.play('die');
+        } else if (current <= robot.maxCurrent) {
+            state.robot.animations.play('turningOn');
+            state.robot.animations.currentAnim.speed = current;
+        } else {
+            state.robot.animations.play('turningOn');
+            state.robot.animations.currentAnim.speed = 10;
+        }
     }
 }
 
@@ -273,8 +275,11 @@ function stopAnimate(state) {
         }
     }
     state.pump.animations.stop();
-    state.robot.animations.stop();
-    state.robot.frame = 0;
+
+    if (state.robot != null) {
+        state.robot.animations.stop();
+        state.robot.frame = 0;
+    }
 }
 
 function makePipes(state) {
@@ -287,7 +292,6 @@ function makePipes(state) {
     state.pump = new Pump(startx + 75, starty + 50, state);
     //  Make pipe
 
-    pipes[2] = new Mill(startx + 375, starty, state);
     pipes.push(new Pipe(startx + 50, starty + 100, state, 'elbow4', false));
     pipes.push(new Pipe(startx + 100, starty + 100, state, 'pipeh', false));
     pipes.push(new Pipe(startx + 150, starty + 100, state, 'pipeh', false));
@@ -297,9 +301,11 @@ function makePipes(state) {
     pipes.push(new Pipe(startx + 350, starty + 100, state, 'pipeh', false));
     pipes.push(new Pipe(startx + 400, starty + 100, state, 'pipeh', false));
 
-    pipes.push(new Pipe(startx + 450, starty + 100, state, 'elbow3', false));
+    pipes.push(new Pipe(startx + 440, starty + 100, state, 'elbow3', false));
     pipes.push(new Pipe(startx + 400, starty - 50, state, 'elbow2', false));
     pipes.push(new Pipe(startx + 50, starty - 50, state, 'elbow1', false));
+
+    pipes.push(new Pipe(startx + 440, starty + 50, state, 'pipe', false));
 
     pipes.push(new Pipe(startx + 150, starty - 50, state, 'pipeh', false));
     pipes.push(new Pipe(startx + 100, starty - 50, state, 'pipeh', false));
@@ -308,7 +314,11 @@ function makePipes(state) {
     pipes.push(new Pipe(startx + 300, starty - 50, state, 'pipeh', false));
     pipes.push(new Pipe(startx + 350, starty - 50, state, 'pipeh', false));
 
-    //pipes.push(new Resistor(50, 425, state, 'resistor', 30));
+    state.mill = new Mill(startx + 375, starty, state);
+
+    pipes.push(state.mill);
+
+    //pipes.push(new Resistor(50, 425, state, 'resistor', 30)); 
 }
 
 function addPipes(state) {

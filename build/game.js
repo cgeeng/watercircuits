@@ -8,76 +8,20 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var Game = (function (_Phaser$Game) {
-    _inherits(Game, _Phaser$Game);
+      _inherits(Game, _Phaser$Game);
 
-    function Game() {
-        _classCallCheck(this, Game);
+      function Game() {
+            _classCallCheck(this, Game);
 
-        _get(Object.getPrototypeOf(Game.prototype), 'constructor', this).call(this, 700, 500, Phaser.AUTO, 'content', null, false, false);
-        this.state.add('Boot', Boot, false);
-        this.state.add('Play', Play, false);
-        this.state.start('Boot');
-        //this.state.start('Play');
-    }
+            _get(Object.getPrototypeOf(Game.prototype), 'constructor', this).call(this, 700, 500, Phaser.AUTO, 'content', null, false, false);
+            this.state.add('Boot', Boot, false);
+            this.state.add('LevelSelect', LevelSelect, false);
+            this.state.add('Play', Play, false);
+            this.state.add('Level0', Level0, false);
+            this.state.add('Level2', Level2, false);
+            this.state.start('Boot');
+            //this.state.start('Play');
+      }
 
-    /*
-    class Level extends Phaser.Game {
-        constructor () {
-            super(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render });
-            
-            let source;
-            let sink;
-            let pipe;
-            let pipe2;
-            let pipe3;
-            let cursors;
-            let text;
-            let pieces;
-            let connectText;
-            
-    
-        
-            
-        }
-                function preload() {
-                this.load.image('source', 'resources/assets/source.png');
-                this.load.image('sink', 'resources/assets/sink.png');
-                this.load.spritesheet('pipe', 'resources/assets/pipesheet.png', 50, 50);
-                this.load.spritesheet('pipeh', 'resources/assets/pipehsheet.png', 50, 50);
-            
-            }
-            function create() {
-                //make an UNDIRECTED GRAAAAAPH!!!!
-                g = new graphlib.Graph({ directed: false});
-                //  Make source
-                source = new Source(200, 200);   
-                sink = new Sink(400, 200);
-    
-                //  Make pipe
-                pipe = new Pipe(50, 250);
-                pipe2 = new PipeH(750, 250);
-                pipe3 = new Pipe(375, 200);
-                //  Our controls.
-                cursors = this.input.keyboard.createCursorKeys();
-    
-                text = this.add.text(0, 0, "are the pipes fudgin connected", {fill: "#ff0044"});
-    
-                //Set up edges
-                initEdges();
-        
-            }
-    
-            function update() {
-                if ( source.isConnectedSink ) {
-                    text.text = "WATER RUN";
-                    pipe.animations.play('on');
-                } else {
-                    text.text = "WATER NO RUN";
-                    //turnOffPipes();
-                }
-    
-            }
-    }
-    */
-    return Game;
+      return Game;
 })(Phaser.Game);

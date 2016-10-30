@@ -19,8 +19,6 @@ var Boot = (function (_Phaser$State) {
         _get(Object.getPrototypeOf(Boot.prototype), 'constructor', this).apply(this, arguments);
     }
 
-    //Gameplay state
-
     _createClass(Boot, [{
         key: 'preload',
         value: function preload() {
@@ -43,10 +41,15 @@ var Boot = (function (_Phaser$State) {
 
             game.load.spritesheet('robot1', 'resources/assets/robot1sheet.png', 700, 500);
 
+            //UI stuff
             game.load.image('white', 'resources/assets/ui/white.png');
             game.load.image('circuit', 'resources/assets/ui/circuit.png');
             game.load.image('math', 'resources/assets/ui/math.png');
             game.load.spritesheet('circuitButton', 'resources/assets/ui/buttonsheet.png', 117, 45);
+            game.load.image('cover1', 'resources/assets/circuit/cover1.png');
+
+            game.load.image('exit', 'resources/assets/ui/exit.png');
+            game.load.spritesheet('arrow', 'resources/assets/ui/arrow.png', 50, 50);
         }
     }, {
         key: 'create',
@@ -65,15 +68,68 @@ var Boot = (function (_Phaser$State) {
             this.text.destroy();
             //so I can get left and right
             game.input.mouse.capture = true;
-            game.state.start('Play');
+            game.state.start('LevelSelect');
         }
     }]);
 
     return Boot;
 })(Phaser.State);
 
-var Play = (function (_Phaser$State2) {
-    _inherits(Play, _Phaser$State2);
+var LevelSelect = (function (_Phaser$State2) {
+    _inherits(LevelSelect, _Phaser$State2);
+
+    function LevelSelect() {
+        _classCallCheck(this, LevelSelect);
+
+        _get(Object.getPrototypeOf(LevelSelect.prototype), 'constructor', this).apply(this, arguments);
+    }
+
+    //Gameplay state
+
+    _createClass(LevelSelect, [{
+        key: 'create',
+        value: function create() {
+            this.level1 = new RainbowText(this.game, 250, 250, "Level 1");
+            this.level1.inputEnabled = true;
+            this.level1.input.useHandCursor = true;
+            this.level1.events.onInputUp.add(function () {
+                this.destroy();
+                game.state.start('Level0');
+            }, this);
+            this.level2 = new RainbowText(this.game, 250, 300, "Level 2");
+            this.level2.inputEnabled = true;
+            this.level2.input.useHandCursor = true;
+            this.level2.events.onInputUp.add(function () {
+                this.destroy();
+                game.state.start('Play');
+            }, this);
+            this.level3 = new RainbowText(this.game, 250, 350, "Level 3");
+            this.level3.inputEnabled = true;
+            this.level3.input.useHandCursor = true;
+            this.level3.events.onInputUp.add(function () {
+                this.destroy();
+                game.state.start('Level2');
+            }, this);
+        }
+    }, {
+        key: 'goToLevel',
+        value: function goToLevel() {
+            game.state.start('Level0');
+        }
+    }, {
+        key: 'destroy',
+        value: function destroy() {
+            this.level1.destroy();
+            this.level2.destroy();
+            this.level3.destroy();
+        }
+    }]);
+
+    return LevelSelect;
+})(Phaser.State);
+
+var Play = (function (_Phaser$State3) {
+    _inherits(Play, _Phaser$State3);
 
     function Play() {
         _classCallCheck(this, Play);
@@ -82,6 +138,11 @@ var Play = (function (_Phaser$State2) {
     }
 
     _createClass(Play, [{
+        key: 'back',
+        value: function back() {
+            game.state.start('LevelSelect');
+        }
+    }, {
         key: 'create',
         value: function create() {
             //prevents popup on right click
@@ -89,7 +150,6 @@ var Play = (function (_Phaser$State2) {
                 e.preventDefault();
             };
             this.add.sprite(0, 0, 'sky');
-            this.add.sprite(0, 0, 'overlay');
 
             //ROBOT STUFF
             this.robot = new Robot(0, 0, this);
@@ -101,11 +161,13 @@ var Play = (function (_Phaser$State2) {
             this.pipes = [];
             //this holds the weird pump
             this.pump;
+            this.mill;
             makePipes(this);
 
-            this.text = this.add.text(0, 0, "are the pipes fudgin connected", { fill: "#ff0044" });
+            //this.text = this.add.text(0, 0, "are the pipes fudgin connected", {fill: "#ff0044"});
             addPipes(this);
             this.setToolbox();
+            this.createButtons();
             this.initEdges();
 
             //CIRCUIT OVERLAY
@@ -124,10 +186,10 @@ var Play = (function (_Phaser$State2) {
         key: 'update',
         value: function update() {
             if (this.pipes[0].isConnectedSink) {
-                this.text.text = "WATER RUN";
+                //this.text.text = "WATER RUN";
                 animatePipes(this);
             } else {
-                this.text.text = "WATER NO RUN";
+                //this.text.text = "WATER NO RUN";
                 stopAnimate(this);
             }
         }
@@ -148,8 +210,18 @@ var Play = (function (_Phaser$State2) {
             }
         }
     }, {
+        key: 'createButtons',
+        value: function createButtons() {
+            //buttons
+            this.exit = this.add.sprite(10, 10, 'exit');
+            this.exit.inputEnabled = true;
+            this.exit.input.useHandCursor = true;
+            this.exit.events.onInputUp.add(this.back, this);
+        }
+    }, {
         key: 'setToolbox',
         value: function setToolbox() {
+            this.add.sprite(0, 0, 'overlay');
             var draggable = new Pipe(40, 425, this, 'pipeh', true);
             draggable.input.useHandCursor = true;
             addToState(this, draggable);

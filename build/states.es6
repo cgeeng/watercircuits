@@ -21,11 +21,15 @@ class Boot extends Phaser.State {
         
         game.load.spritesheet('robot1', 'resources/assets/robot1sheet.png', 700, 500);
         
+        //UI stuff
         game.load.image('white', 'resources/assets/ui/white.png');
         game.load.image('circuit', 'resources/assets/ui/circuit.png');
         game.load.image('math', 'resources/assets/ui/math.png');
         game.load.spritesheet('circuitButton', 'resources/assets/ui/buttonsheet.png', 117, 45);
+        game.load.image('cover1', 'resources/assets/circuit/cover1.png');
         
+        game.load.image('exit', 'resources/assets/ui/exit.png');
+        game.load.spritesheet('arrow', 'resources/assets/ui/arrow.png', 50, 50);
     }
 
 	create() {
@@ -41,21 +45,56 @@ class Boot extends Phaser.State {
         this.text.destroy();
         //so I can get left and right
         game.input.mouse.capture = true;
-        game.state.start('Play');
+        game.state.start('LevelSelect');
 
     }
         
 }
 
+class LevelSelect extends Phaser.State {
+    create() {
+        this.level1 = new RainbowText(this.game, 250, 250, "Level 1");
+        this.level1.inputEnabled = true;
+        this.level1.input.useHandCursor = true;
+        this.level1.events.onInputUp.add(function() {
+            this.destroy();
+            game.state.start('Level0');} , this);
+        this.level2 = new RainbowText(this.game, 250, 300, "Level 2");
+        this.level2.inputEnabled = true;
+        this.level2.input.useHandCursor = true;
+        this.level2.events.onInputUp.add(function() {
+        this.destroy();
+            game.state.start('Play');} , this);
+        this.level3 = new RainbowText(this.game, 250, 350, "Level 3");
+        this.level3.inputEnabled = true;
+        this.level3.input.useHandCursor = true;
+        this.level3.events.onInputUp.add(function() {
+        this.destroy();
+            game.state.start('Level2');} , this);
+    }
+    
+    goToLevel() {
+        game.state.start('Level0');
+    }
+    
+    destroy() {
+        this.level1.destroy();
+        this.level2.destroy();
+        this.level3.destroy();
+    }
+}
 //Gameplay state
 class Play extends Phaser.State {
+
+    back() {
+        game.state.start('LevelSelect');
+    }
 
   create() {
       //prevents popup on right click
     game.canvas.oncontextmenu = function (e) { e.preventDefault(); }
     this.add.sprite(0,0,'sky');
-    this.add.sprite(0,0,'overlay');
-    
+      
     //ROBOT STUFF
     this.robot = new Robot(0,0, this); 
     this.add.existing(this.robot);
@@ -66,11 +105,13 @@ class Play extends Phaser.State {
     this.pipes = [];
     //this holds the weird pump
     this.pump;
+    this.mill;
     makePipes(this);
       
-    this.text = this.add.text(0, 0, "are the pipes fudgin connected", {fill: "#ff0044"});
+    //this.text = this.add.text(0, 0, "are the pipes fudgin connected", {fill: "#ff0044"});
     addPipes(this);
     this.setToolbox();
+    this.createButtons();
     this.initEdges();
       
         //CIRCUIT OVERLAY
@@ -88,10 +129,10 @@ class Play extends Phaser.State {
   }
     update() {
             if ( this.pipes[0].isConnectedSink ) {
-                this.text.text = "WATER RUN";
+                //this.text.text = "WATER RUN";
                 animatePipes(this);
             } else {
-                this.text.text = "WATER NO RUN";
+                //this.text.text = "WATER NO RUN";
                 stopAnimate(this);
             }
 
@@ -112,8 +153,17 @@ toggleCircuit() {
     }
         
 }
+createButtons() {
+    //buttons
+    this.exit = this.add.sprite(10,10, 'exit');
+    this.exit.inputEnabled = true;
+    this.exit.input.useHandCursor = true;
+    this.exit.events.onInputUp.add(this.back, this);
+    
+}
     
 setToolbox() {
+    this.add.sprite(0,0,'overlay');
     let draggable = new Pipe(40, 425, this, 'pipeh', true);
     draggable.input.useHandCursor = true;
     addToState(this, draggable);
