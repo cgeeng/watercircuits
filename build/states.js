@@ -110,6 +110,13 @@ var LevelSelect = (function (_Phaser$State2) {
                 this.destroy();
                 game.state.start('Level2');
             }, this);
+            this.level4 = new RainbowText(this.game, 450, 250, "Level 4");
+            this.level4.inputEnabled = true;
+            this.level4.input.useHandCursor = true;
+            this.level4.events.onInputUp.add(function () {
+                this.destroy();
+                game.state.start('Level3');
+            }, this);
         }
     }, {
         key: 'goToLevel',
@@ -122,6 +129,7 @@ var LevelSelect = (function (_Phaser$State2) {
             this.level1.destroy();
             this.level2.destroy();
             this.level3.destroy();
+            this.level4.destroy();
         }
     }]);
 
@@ -140,6 +148,11 @@ var Play = (function (_Phaser$State3) {
     _createClass(Play, [{
         key: 'back',
         value: function back() {
+            if (this.voltageText != null) {
+                this.voltageText.destroy();
+                this.voltageLabel.destroy();
+            }
+
             game.state.start('LevelSelect');
         }
     }, {
@@ -181,6 +194,9 @@ var Play = (function (_Phaser$State3) {
             this.white.alpha = 0;
             this.circuit.alpha = 0;
             this.math.alpha = 0;
+
+            this.upArrow;
+            this.downArrow;
         }
     }, {
         key: 'update',
@@ -217,6 +233,16 @@ var Play = (function (_Phaser$State3) {
             this.exit.inputEnabled = true;
             this.exit.input.useHandCursor = true;
             this.exit.events.onInputUp.add(this.back, this);
+
+            console.log("whatup");
+
+            this.upArrow = game.add.button(150, 250, 'arrow', increaseVoltage, this, 0, 0, 0);
+            this.upArrow.input.useHandCursor = true;
+
+            this.downArrow = game.add.button(50, 250, 'arrow', decreaseVoltage, this, 0, 0, 0);
+            this.downArrow.input.useHandCursor = true;
+            this.downArrow.anchor.setTo(1, 1);
+            this.downArrow.angle += 180;
         }
     }, {
         key: 'setToolbox',

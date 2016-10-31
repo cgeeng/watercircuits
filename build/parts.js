@@ -88,9 +88,11 @@ var Pump = (function (_Phaser$Sprite3) {
         this.animations.add('on', [1, 2, 3, 4], 10, true);
 
         //drag resize
+        /*
         this.inputEnabled = true;
         this.input.useHandCursor = true;
         this.events.onInputDown.add(changeVoltage, this);
+        */
 
         this.anchor.setTo(0.5, 0.5);
 
@@ -195,21 +197,41 @@ var Robot = (function (_Phaser$Sprite7) {
         this.animations.add('die', [7, 8], 10, false);
     }
 
-    //END CLASSES
-
     return Robot;
 })(Phaser.Sprite);
 
-function changeVoltage(sprite, pointer) {
+var displayText = (function (_Phaser$Text) {
+    _inherits(displayText, _Phaser$Text);
 
-    if (pointer.button == 0) {
-        //left click
-        sprite.scale.setTo(sprite.scale.x + 0.1, sprite.scale.y + 0.1);
-        sprite.voltage += 3;
-    } else {
-        sprite.scale.setTo(sprite.scale.x - 0.1, sprite.scale.y - 0.1);
-        sprite.voltage -= 3;
+    function displayText(game, x, y, text) {
+        _classCallCheck(this, displayText);
+
+        _get(Object.getPrototypeOf(displayText.prototype), 'constructor', this).call(this, game, x, y, text, { font: "20px Arial", fill: "#ff0044", align: "center" });
+
+        this.game.stage.addChild(this);
     }
+
+    //END CLASSES
+
+    return displayText;
+})(Phaser.Text);
+
+function increaseVoltage(sprite, pointer) {
+    var pump = this.pump;
+    if (pump.voltage <= 80) {
+        pump.scale.setTo(pump.scale.x + 0.1, pump.scale.y + 0.1);
+        pump.voltage += 3;
+    }
+    if (this.voltageText != null) this.voltageText.text = pump.voltage / 10 + "V";
+}
+function decreaseVoltage(sprite, pointer) {
+
+    var pump = this.pump;
+    if (pump.voltage >= 0) {
+        pump.scale.setTo(pump.scale.x - 0.1, pump.scale.y - 0.1);
+        pump.voltage -= 3;
+    }
+    if (this.voltageText != null) this.voltageText.text = pump.voltage / 10 + "V";
 }
 
 function checkResistance(state) {

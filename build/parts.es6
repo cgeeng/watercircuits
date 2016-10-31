@@ -63,9 +63,11 @@ class Pump extends Phaser.Sprite {
         this.animations.add('on', [1, 2, 3, 4], 10, true);
         
         //drag resize
+        /*
         this.inputEnabled = true;
         this.input.useHandCursor = true;
         this.events.onInputDown.add(changeVoltage, this);
+        */
         
         this.anchor.setTo(0.5, 0.5);
         
@@ -145,20 +147,35 @@ class Robot extends Phaser.Sprite {
     }
 }
 
+class displayText extends Phaser.Text {
+
+	constructor(game, x, y, text) {
+
+		super(game, x, y, text, { font: "20px Arial", fill: "#ff0044", align: "center" });
+
+		this.game.stage.addChild(this);
+
+	}
+}
 //END CLASSES
 
 
-function changeVoltage(sprite, pointer) {
-    
-    if (pointer.button == 0) {
-        //left click
-        sprite.scale.setTo(sprite.scale.x + 0.1, sprite.scale.y + 0.1);
-        sprite.voltage += 3;
-    } else {
-        sprite.scale.setTo(sprite.scale.x - 0.1, sprite.scale.y - 0.1);
-        sprite.voltage -= 3;
+function increaseVoltage(sprite, pointer) {
+    let pump = this.pump;
+    if (pump.voltage <= 80) {
+        pump.scale.setTo(pump.scale.x + 0.1, pump.scale.y + 0.1);
+        pump.voltage += 3;
     }
+    if (this.voltageText != null) this.voltageText.text = pump.voltage/10 + "V";
+}
+function decreaseVoltage(sprite, pointer) {
     
+    let pump = this.pump;
+    if (pump.voltage >= 0) {
+        pump.scale.setTo(pump.scale.x - 0.1, pump.scale.y - 0.1);
+        pump.voltage -= 3;
+    }
+    if (this.voltageText != null) this.voltageText.text = pump.voltage/10 + "V";
 }
 
 function checkResistance(state) {
