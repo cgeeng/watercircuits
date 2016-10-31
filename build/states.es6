@@ -27,6 +27,8 @@ class Boot extends Phaser.State {
         game.load.image('math', 'resources/assets/ui/math.png');
         game.load.spritesheet('circuitButton', 'resources/assets/ui/buttonsheet.png', 117, 45);
         game.load.image('cover1', 'resources/assets/circuit/cover1.png');
+        game.load.image('cover2', 'resources/assets/circuit/cover2.png');
+        game.load.image('circuitResistor', 'resources/assets/circuit/resistor.png');
         
         game.load.image('exit', 'resources/assets/ui/exit.png');
         game.load.spritesheet('arrow', 'resources/assets/ui/arrow.png', 50, 50);
@@ -97,6 +99,15 @@ class Play extends Phaser.State {
         if (this.voltageText != null) {
             this.voltageText.destroy();
             this.voltageLabel.destroy();
+        }
+        
+        if (this.resistorText1 != null) {
+            this.resistorText1.destroy();
+            this.resistorLabel1.destroy();
+        }
+        if (this.resistorText2 != null) {
+            this.resistorText2.destroy();
+            this.resistorLabel2.destroy();
         }
 
         game.state.start('LevelSelect');

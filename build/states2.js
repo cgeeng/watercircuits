@@ -110,14 +110,15 @@ var Level2 = (function (_Play2) {
         key: 'createBattery',
         value: function createBattery() {
             this.voltageLabel = new displayText(this.game, 30, 210, "Voltage:");
+            this.voltageText = new displayText(this.game, 50, 230, this.pump.voltage / 10 + "V");
         }
     }]);
 
     return Level2;
 })(Play);
 
-var Level3 = (function (_Play3) {
-    _inherits(Level3, _Play3);
+var Level3 = (function (_Level2) {
+    _inherits(Level3, _Level2);
 
     function Level3() {
         _classCallCheck(this, Level3);
@@ -160,15 +161,32 @@ var Level3 = (function (_Play3) {
     }, {
         key: 'createCircuit',
         value: function createCircuit() {
-            this.add.sprite(0, 0, 'cover1');
+            this.add.sprite(0, 0, 'cover2');
             this.createBattery();
         }
     }, {
-        key: 'createBattery',
-        value: function createBattery() {
-            this.voltageLabel = new displayText(this.game, 30, 210, "Voltage:");
+        key: 'setToolbox',
+        value: function setToolbox() {
+            this.add.sprite(0, 0, 'overlay');
+            var draggable = new Pipe(40, 425, this, 'pipeh', true);
+            draggable.input.useHandCursor = true;
+            addToState(this, draggable);
+            this.resistor1 = new Resistor(140, 450, this, 'circuitResistor', 30);
+            addToState(this, this.resistor1);
+            this.resistor2 = new Resistor(300, 450, this, 'circuitResistor', 35);
+            addToState(this, this.resistor2);
+            this.createResistor();
+        }
+    }, {
+        key: 'createResistor',
+        value: function createResistor() {
+            this.resistorLabel1 = new displayText(this.game, this.resistor1.x - 20, this.resistor1.y - 30, "Resistance:");
+            this.resistorText1 = new displayText(this.game, this.resistor1.x, this.resistor1.y - 10, this.resistor1.resistance + "Ohms");
+
+            this.resistorLabel2 = new displayText(this.game, this.resistor2.x - 20, this.resistor2.y - 30, "Resistance:");
+            this.resistorText2 = new displayText(this.game, this.resistor2.x, this.resistor2.y - 10, this.resistor2.resistance + 100 + "Ohms");
         }
     }]);
 
     return Level3;
-})(Play);
+})(Level2);
