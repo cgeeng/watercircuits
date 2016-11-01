@@ -57,7 +57,7 @@ class Pump extends Phaser.Sprite {
         super(game, x, y, 'pump');
         this.w = WIDTH*2;
         this.h = HEIGHT*2;
-        this.voltage = 40;
+        this.voltage = 6;
         this.state = state;
         
         this.animations.add('on', [1, 2, 3, 4], 10, true);
@@ -139,7 +139,7 @@ class Sink extends Phaser.Sprite {
 class Robot extends Phaser.Sprite {
     constructor (x, y, state) {
         super(game, x, y, 'robot1');
-        this.maxCurrent = 30;
+        this.maxCurrent = 3; //amps
         
         this.animations.add('turningOn', [1,2,3,4,5, 6], 10, false); 
         this.animations.add('on', [5, 6], 20, true);  
@@ -162,27 +162,27 @@ class displayText extends Phaser.Text {
 
 function increaseVoltage(sprite, pointer) {
     let pump = this.pump;
-    if (pump.voltage <= 80) {
+    if (pump.voltage <= 20) {
         pump.scale.setTo(pump.scale.x + 0.1, pump.scale.y + 0.1);
-        pump.voltage += 3;
+        pump.voltage += 2;
     }
-    if (this.voltageText != null) this.voltageText.text = pump.voltage/10 + "V";
+    if (this.voltageText != null) this.voltageText.text = pump.voltage + "V";
 }
 function decreaseVoltage(sprite, pointer) {
     
     let pump = this.pump;
-    if (pump.voltage >= 0) {
+    if (pump.voltage >= 2) {
         pump.scale.setTo(pump.scale.x - 0.1, pump.scale.y - 0.1);
-        pump.voltage -= 3;
+        pump.voltage -= 2;
     }
-    if (this.voltageText != null) this.voltageText.text = pump.voltage/10 + "V";
+    if (this.voltageText != null) this.voltageText.text = pump.voltage+ "V";
 }
 
 function checkResistance(state) {
     //If pipes connected, check if resistor is in circuit
     let pipes = state.pipes;
     let circuit = graphlib.alg.preorder(state.g,"0");
-    let resistance = 0;
+    let resistance = 10;
 
     for (let i in circuit) {
         let k = circuit[i];
@@ -196,8 +196,9 @@ function checkResistance(state) {
 function setCurrent(state, resistance) {
     //Dictates how fast the wheel spinss
     let pipes = state.pipes;
-    state.mill.animations.currentAnim.speed = state.pump.voltage - resistance;
-    return state.pump.voltage - resistance;
+    state.mill.animations.currentAnim.speed = mapCurrent(state.pump.voltage / resistance);
+    if (state.LEDText != null) { state.LEDText.text = state.pump.voltage / resistance + "amps"};
+    return state.pump.voltage / resistance;
 }
 
 function animatePipes(state) {
@@ -206,7 +207,7 @@ function animatePipes(state) {
     //Check if resistor in circuit
     let resistance = checkResistance(state);
     let current = setCurrent(state, resistance);
-    console.log(current);
+    //console.log(current);
     for (var i in pipes) {
         //I only have animation files for 2 types, i gotta fix this shit up lol
         if (pipes[i].key == 'pipe' || pipes[i].key == 'pipeh' || pipes[i].key == 'mill'|| pipes[i].key == 'resistor' || pipes[i].key == 'resistor2') {
@@ -222,7 +223,9 @@ function animatePipes(state) {
             state.robot.animations.play('die')
         } else if (current <= robot.maxCurrent) {
             state.robot.animations.play('turningOn');
-            state.robot.animations.currentAnim.speed = current;
+            console.log(current);
+            console.log(mapCurrent(current));
+            state.robot.animations.currentAnim.speed = mapCurrent(current);
         } else {
             state.robot.animations.play('turningOn');
             state.robot.animations.currentAnim.speed = 10;

@@ -1,13 +1,11 @@
 to-do list
 
     -concreteness fading
-    
-    -More cleanly check for correct current
-    -Introduce metaphor first and then have the robot?
-    -make robot states clearer
-    -make pump smaller
+    -PROPER MATH for V = IR
+
+
     -make interactable thingsmore clear
-    -have a funnel/something more clear showing the mill is connected to the pipes
+
     -set speed of water in all pipes?
 
 

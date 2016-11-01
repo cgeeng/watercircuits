@@ -28,6 +28,7 @@ class Boot extends Phaser.State {
         game.load.spritesheet('circuitButton', 'resources/assets/ui/buttonsheet.png', 117, 45);
         game.load.image('cover1', 'resources/assets/circuit/cover1.png');
         game.load.image('cover2', 'resources/assets/circuit/cover2.png');
+        game.load.image('cover3', 'resources/assets/circuit/cover3.png');
         game.load.image('circuitResistor', 'resources/assets/circuit/resistor.png');
         
         game.load.image('exit', 'resources/assets/ui/exit.png');
@@ -79,6 +80,12 @@ class LevelSelect extends Phaser.State {
         this.level4.events.onInputUp.add(function() {
             this.destroy();
             game.state.start('Level3');} , this);
+        this.level5 = new RainbowText(this.game, 450, 300, "Level 5");
+        this.level5.inputEnabled = true;
+        this.level5.input.useHandCursor = true;
+        this.level5.events.onInputUp.add(function() {
+            this.destroy();
+            game.state.start('Level4');} , this);
     }
     
     goToLevel() {
@@ -90,6 +97,7 @@ class LevelSelect extends Phaser.State {
         this.level2.destroy();
         this.level3.destroy();
         this.level4.destroy();
+        this.level5.destroy();
     }
 }
 //Gameplay state
@@ -108,6 +116,10 @@ class Play extends Phaser.State {
         if (this.resistorText2 != null) {
             this.resistorText2.destroy();
             this.resistorLabel2.destroy();
+        }
+        if (this.LEDText != null) {
+            this.LEDText.destroy();
+            this.LEDLabel.destroy();
         }
 
         game.state.start('LevelSelect');
@@ -151,17 +163,44 @@ class Play extends Phaser.State {
       
     this.upArrow;
     this.downArrow;
+      
+    this.setFailure();
 
   }
     update() {
-            if ( this.pipes[0].isConnectedSink ) {
-                //this.text.text = "WATER RUN";
-                animatePipes(this);
-            } else {
-                //this.text.text = "WATER NO RUN";
-                stopAnimate(this);
-            }
+        if ( this.pipes[0].isConnectedSink ) {
+            //this.text.text = "WATER RUN";
+            animatePipes(this);
+        } else {
+            //this.text.text = "WATER NO RUN";
+            stopAnimate(this);
+        }
 
+        //update resistor group position
+        if (this.resistorLabel1 != null) {
+            if (game.input.onUp != true) {
+                this.resistorLabel1.x = this.resistor1.x - 20;
+                this.resistorLabel1.y = this.resistor1.y - 30;
+                this.resistorText1.x = this.resistor1.x;
+                this.resistorText1.y = this.resistor1.y - 10;
+                
+                this.resistorLabel2.x = this.resistor2.x - 20;
+                this.resistorLabel2.y = this.resistor2.y - 30;
+                this.resistorText2.x = this.resistor2.x;
+                this.resistorText2.y = this.resistor2.y - 10;
+            }
+        }
+        
+        
+
+    }
+    
+    setFailure() {
+        this.failureText = new displayText(this.game, 350, 250, "");
+    }
+    
+    updateLabelPosition() {
+        //Moves resistor labels to where resistor position is
     }
 
 toggleCircuit() {
@@ -203,8 +242,8 @@ setToolbox() {
     let draggable = new Pipe(40, 425, this, 'pipeh', true);
     draggable.input.useHandCursor = true;
     addToState(this, draggable);
-    addToState(this, new Resistor(140, 425, this, 'resistor', 30));
-    addToState(this, new Resistor(300, 425, this, 'resistor2', 35));
+    addToState(this, new Resistor(140, 425, this, 'resistor', 20));
+    addToState(this, new Resistor(300, 425, this, 'resistor2', 50));
 }
 
 initEdges() {    

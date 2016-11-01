@@ -28,3 +28,10 @@ function containsObject(obj, list) {
     }
     return false;
 }
+
+function mapCurrent(current) {
+    //Range of frames per second is 2 to 15
+    let fps = 50 * current/3;    
+    return fps;
+        
+}

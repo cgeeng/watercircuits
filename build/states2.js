@@ -110,7 +110,7 @@ var Level2 = (function (_Play2) {
         key: 'createBattery',
         value: function createBattery() {
             this.voltageLabel = new displayText(this.game, 30, 210, "Voltage:");
-            this.voltageText = new displayText(this.game, 50, 230, this.pump.voltage / 10 + "V");
+            this.voltageText = new displayText(this.game, 50, 230, this.pump.voltage + "V");
         }
     }]);
 
@@ -171,9 +171,9 @@ var Level3 = (function (_Level2) {
             var draggable = new Pipe(40, 425, this, 'pipeh', true);
             draggable.input.useHandCursor = true;
             addToState(this, draggable);
-            this.resistor1 = new Resistor(140, 450, this, 'circuitResistor', 30);
+            this.resistor1 = new Resistor(140, 450, this, 'circuitResistor', 20);
             addToState(this, this.resistor1);
-            this.resistor2 = new Resistor(300, 450, this, 'circuitResistor', 35);
+            this.resistor2 = new Resistor(300, 450, this, 'circuitResistor', 50);
             addToState(this, this.resistor2);
             this.createResistor();
         }
@@ -190,3 +190,62 @@ var Level3 = (function (_Level2) {
 
     return Level3;
 })(Level2);
+
+var Level4 = (function (_Level3) {
+    _inherits(Level4, _Level3);
+
+    function Level4() {
+        _classCallCheck(this, Level4);
+
+        _get(Object.getPrototypeOf(Level4.prototype), 'constructor', this).call(this);
+    }
+
+    _createClass(Level4, [{
+        key: 'create',
+        value: function create() {
+            //prevents popup on right click
+            game.canvas.oncontextmenu = function (e) {
+                e.preventDefault();
+            };
+            this.add.sprite(0, 0, 'sky');
+
+            //ROBOT STUFF
+            this.robot = new Robot(0, 0, this);
+            this.add.existing(this.robot);
+            //make an UNDIRECTED GRAAAAAPH!!!!
+            this.g = new graphlib.Graph({ directed: false }); //{ directed: false}
+            this.pipeCount = 2; //accounts for source and sink; 0 = source, 1 = sink 
+
+            this.pipes = [];
+            //this holds the weird pump
+            this.pump;
+            this.mill;
+            makePipes(this);
+
+            //this.text = this.add.text(0, 0, "are the pipes fudgin connected", {fill: "#ff0044"});
+            addPipes(this);
+            this.createCircuit();
+            this.setToolbox();
+            this.createButtons();
+            this.createLED();
+            this.initEdges();
+
+            this.upArrow;
+            this.downArrow;
+        }
+    }, {
+        key: 'createCircuit',
+        value: function createCircuit() {
+            this.add.sprite(0, 0, 'cover3');
+            this.createBattery();
+        }
+    }, {
+        key: 'createLED',
+        value: function createLED() {
+            this.LEDLabel = new displayText(this.game, 400, 220, "Max Current: 15amps");
+            this.LEDText = new displayText(this.game, 500, 290, "0amps");
+        }
+    }]);
+
+    return Level4;
+})(Level3);

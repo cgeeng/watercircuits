@@ -48,6 +48,7 @@ var Boot = (function (_Phaser$State) {
             game.load.spritesheet('circuitButton', 'resources/assets/ui/buttonsheet.png', 117, 45);
             game.load.image('cover1', 'resources/assets/circuit/cover1.png');
             game.load.image('cover2', 'resources/assets/circuit/cover2.png');
+            game.load.image('cover3', 'resources/assets/circuit/cover3.png');
             game.load.image('circuitResistor', 'resources/assets/circuit/resistor.png');
 
             game.load.image('exit', 'resources/assets/ui/exit.png');
@@ -119,6 +120,13 @@ var LevelSelect = (function (_Phaser$State2) {
                 this.destroy();
                 game.state.start('Level3');
             }, this);
+            this.level5 = new RainbowText(this.game, 450, 300, "Level 5");
+            this.level5.inputEnabled = true;
+            this.level5.input.useHandCursor = true;
+            this.level5.events.onInputUp.add(function () {
+                this.destroy();
+                game.state.start('Level4');
+            }, this);
         }
     }, {
         key: 'goToLevel',
@@ -132,6 +140,7 @@ var LevelSelect = (function (_Phaser$State2) {
             this.level2.destroy();
             this.level3.destroy();
             this.level4.destroy();
+            this.level5.destroy();
         }
     }]);
 
@@ -162,6 +171,10 @@ var Play = (function (_Phaser$State3) {
             if (this.resistorText2 != null) {
                 this.resistorText2.destroy();
                 this.resistorLabel2.destroy();
+            }
+            if (this.LEDText != null) {
+                this.LEDText.destroy();
+                this.LEDLabel.destroy();
             }
 
             game.state.start('LevelSelect');
@@ -208,6 +221,8 @@ var Play = (function (_Phaser$State3) {
 
             this.upArrow;
             this.downArrow;
+
+            this.setFailure();
         }
     }, {
         key: 'update',
@@ -219,6 +234,31 @@ var Play = (function (_Phaser$State3) {
                 //this.text.text = "WATER NO RUN";
                 stopAnimate(this);
             }
+
+            //update resistor group position
+            if (this.resistorLabel1 != null) {
+                if (game.input.onUp != true) {
+                    this.resistorLabel1.x = this.resistor1.x - 20;
+                    this.resistorLabel1.y = this.resistor1.y - 30;
+                    this.resistorText1.x = this.resistor1.x;
+                    this.resistorText1.y = this.resistor1.y - 10;
+
+                    this.resistorLabel2.x = this.resistor2.x - 20;
+                    this.resistorLabel2.y = this.resistor2.y - 30;
+                    this.resistorText2.x = this.resistor2.x;
+                    this.resistorText2.y = this.resistor2.y - 10;
+                }
+            }
+        }
+    }, {
+        key: 'setFailure',
+        value: function setFailure() {
+            this.failureText = new displayText(this.game, 350, 250, "");
+        }
+    }, {
+        key: 'updateLabelPosition',
+        value: function updateLabelPosition() {
+            //Moves resistor labels to where resistor position is
         }
     }, {
         key: 'toggleCircuit',
@@ -262,8 +302,8 @@ var Play = (function (_Phaser$State3) {
             var draggable = new Pipe(40, 425, this, 'pipeh', true);
             draggable.input.useHandCursor = true;
             addToState(this, draggable);
-            addToState(this, new Resistor(140, 425, this, 'resistor', 30));
-            addToState(this, new Resistor(300, 425, this, 'resistor2', 35));
+            addToState(this, new Resistor(140, 425, this, 'resistor', 20));
+            addToState(this, new Resistor(300, 425, this, 'resistor2', 50));
         }
     }, {
         key: 'initEdges',
