@@ -50,8 +50,7 @@ class Level2 extends Play {
         this.add.sprite(0,0,'sky');
 
         //ROBOT STUFF
-        this.robot = new Robot(0,0, this); 
-        this.add.existing(this.robot);
+        this.makeRobot();
         //make an UNDIRECTED GRAAAAAPH!!!!
         this.g = new graphlib.Graph({ directed: false}); //{ directed: false}
         this.pipeCount = 2; //accounts for source and sink; 0 = source, 1 = sink  
@@ -98,8 +97,7 @@ class Level3 extends Level2 {
         this.add.sprite(0,0,'sky');
 
         //ROBOT STUFF
-        this.robot = new Robot(0,0, this); 
-        this.add.existing(this.robot);
+        this.makeRobot();
         //make an UNDIRECTED GRAAAAAPH!!!!
         this.g = new graphlib.Graph({ directed: false}); //{ directed: false}
         this.pipeCount = 2; //accounts for source and sink; 0 = source, 1 = sink  
@@ -134,9 +132,9 @@ class Level3 extends Level2 {
         let draggable = new Pipe(40, 425, this, 'pipeh', true);
         draggable.input.useHandCursor = true;
         addToState(this, draggable);
-        this.resistor1 = new Resistor(140, 450, this, 'circuitResistor', 20);
+        this.resistor1 = new Resistor(140, 450, this, 'circuitResistor', 10);
         addToState(this, this.resistor1);
-        this.resistor2 = new Resistor(300, 450, this, 'circuitResistor', 50);
+        this.resistor2 = new Resistor(250, 450, this, 'circuitResistor', 20);
         addToState(this, this.resistor2);
         this.createResistor();
     }
@@ -161,8 +159,7 @@ class Level4 extends Level3 {
         this.add.sprite(0,0,'sky');
 
         //ROBOT STUFF
-        this.robot = new Robot(0,0, this); 
-        this.add.existing(this.robot);
+        this.makeRobot();
         //make an UNDIRECTED GRAAAAAPH!!!!
         this.g = new graphlib.Graph({ directed: false}); //{ directed: false}
         this.pipeCount = 2; //accounts for source and sink; 0 = source, 1 = sink  

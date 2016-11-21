@@ -32,14 +32,16 @@ var Boot = (function (_Phaser$State) {
             game.load.spritesheet('pipe', 'resources/assets/pipesheet.png', WIDTH, HEIGHT);
             game.load.spritesheet('pipeh', 'resources/assets/pipehsheet.png', WIDTH, HEIGHT);
             game.load.spritesheet('mill', 'resources/assets/watermillsheet.png', 100, 100);
-            game.load.spritesheet('resistor', 'resources/assets/resistorsheet.png', WIDTH, HEIGHT);
-            game.load.spritesheet('resistor2', 'resources/assets/resistor2sheet.png', WIDTH, HEIGHT);
+            game.load.spritesheet('resistor', 'resources/assets/resistorsheet.png', 2 * WIDTH, HEIGHT);
+            game.load.spritesheet('resistor2', 'resources/assets/resistor2sheet.png', 2 * WIDTH, HEIGHT);
 
             game.load.image('sky', 'resources/assets/bg/sky.png');
             game.load.image('overlay', 'resources/assets/ui/overlay.png');
             game.load.image('robot', 'resources/assets/bg/robot.png');
 
             game.load.spritesheet('robot1', 'resources/assets/robot1sheet.png', 700, 500);
+            game.load.spritesheet('heart', 'resources/assets/heartsheet.png', 700, 500);
+            game.load.spritesheet('bubble', 'resources/assets/bubblesheet.png', 700, 167);
 
             //UI stuff
             game.load.image('white', 'resources/assets/ui/white.png');
@@ -190,8 +192,7 @@ var Play = (function (_Phaser$State3) {
             this.add.sprite(0, 0, 'sky');
 
             //ROBOT STUFF
-            this.robot = new Robot(0, 0, this);
-            this.add.existing(this.robot);
+            this.makeRobot();
             //make an UNDIRECTED GRAAAAAPH!!!!
             this.g = new graphlib.Graph({ directed: false }); //{ directed: false}
             this.pipeCount = 2; //accounts for source and sink; 0 = source, 1 = sink 
@@ -256,6 +257,16 @@ var Play = (function (_Phaser$State3) {
             }
         }
     }, {
+        key: 'makeRobot',
+        value: function makeRobot() {
+            this.robot = new Robot(0, 0, this);
+            this.add.existing(this.robot);
+            this.heart = this.add.sprite(0, 0, 'heart');
+            this.bubble = this.add.sprite(0, 0, 'bubble');
+            this.bubble.visible = false;
+            this.bubble.animations.add('on', [0, 1, 2, 3], 10, true);
+        }
+    }, {
         key: 'setFailure',
         value: function setFailure() {
             this.failureText = new displayText(this.game, 350, 250, "");
@@ -318,8 +329,13 @@ var Play = (function (_Phaser$State3) {
             var draggable = new Pipe(40, 425, this, 'pipeh', true);
             draggable.input.useHandCursor = true;
             addToState(this, draggable);
-            addToState(this, new Resistor(140, 425, this, 'resistor', 20));
-            addToState(this, new Resistor(300, 425, this, 'resistor2', 50));
+
+            var draggable2 = new Pipe(120, 425, this, 'pipeh', true);
+            draggable2.input.useHandCursor = true;
+            addToState(this, draggable2);
+
+            addToState(this, new Resistor(200, 425, this, 'resistor', 20));
+            addToState(this, new Resistor(350, 425, this, 'resistor2', 50));
         }
     }, {
         key: 'initEdges',

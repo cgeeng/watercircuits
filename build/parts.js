@@ -115,12 +115,12 @@ var Resistor = (function (_Phaser$Sprite4) {
         _classCallCheck(this, Resistor);
 
         _get(Object.getPrototypeOf(Resistor.prototype), 'constructor', this).call(this, game, x, y, sprite);
-        this.w = WIDTH;
+        this.w = 2 * WIDTH;
         this.h = HEIGHT;
         this.state = state;
         this.resistance = resistance;
 
-        this.animations.add('on', [1, 2], 20, true);
+        this.animations.add('on', [1, 2, 3, 4], 10, true);
 
         this.isConnectedSource = false;
         this.isConnectedSink = false;
@@ -195,11 +195,11 @@ var Robot = (function (_Phaser$Sprite7) {
         _classCallCheck(this, Robot);
 
         _get(Object.getPrototypeOf(Robot.prototype), 'constructor', this).call(this, game, x, y, 'robot1');
-        this.maxCurrent = 3; //amps
+        this.maxCurrent = 2; //amps
 
         this.animations.add('turningOn', [1, 2, 3, 4, 5, 6], 10, false);
-        this.animations.add('on', [5, 6], 20, true);
-        this.animations.add('die', [7, 8], 10, false);
+        this.animations.add('on', [2, 3, 4, 3], 5, true);
+        this.animations.add('die', [5, 6, 7], 10, false);
     }
 
     return Robot;
@@ -224,7 +224,7 @@ var displayText = (function (_Phaser$Text) {
 function increaseVoltage(sprite, pointer) {
     var pump = this.pump;
     if (pump.voltage <= 20) {
-        pump.scale.setTo(pump.scale.x + 0.1, pump.scale.y + 0.1);
+        pump.scale.setTo(pump.scale.x + 0.05, pump.scale.y + 0.05);
         pump.voltage += 2;
     }
     if (this.voltageText != null) this.voltageText.text = pump.voltage + "V";
@@ -232,8 +232,8 @@ function increaseVoltage(sprite, pointer) {
 function decreaseVoltage(sprite, pointer) {
 
     var pump = this.pump;
-    if (pump.voltage >= 2) {
-        pump.scale.setTo(pump.scale.x - 0.1, pump.scale.y - 0.1);
+    if (pump.voltage >= 1) {
+        pump.scale.setTo(pump.scale.x - 0.05, pump.scale.y - 0.05);
         pump.voltage -= 2;
     }
     if (this.voltageText != null) this.voltageText.text = pump.voltage + "V";
@@ -282,16 +282,26 @@ function animatePipes(state) {
     }
     state.pump.animations.play('on');
     state.pump.animations.currentAnim.speed = mapCurrent(current);
-
     if (robot != null) {
         //Animate robot shit
-        if (current > robot.maxCurrent) {
+        if (current <= robot.maxCurrent / 8) {
+            state.robot.frame = 1;
+            state.heart.frame = 1;
+            state.bubble.visible = false;
+        } else if (current > robot.maxCurrent) {
             state.robot.animations.play('die');
+            state.heart.frame = 5;
+            state.bubble.visible = false;
         } else if (current <= robot.maxCurrent) {
-            state.robot.animations.play('turningOn');
+            state.robot.animations.play('on');
+            state.bubble.animations.play('on');
+            state.bubble.visible = true;
+            if (current <= robot.maxCurrent / 4) state.heart.frame = 2;else if (current <= robot.maxCurrent / 2) state.heart.frame = 3;else if (current <= 3 * robot.maxCurrent / 4) state.heart.frame = 4;
+
             console.log(current);
             //console.log(mapCurrent(current));
             state.robot.animations.currentAnim.speed = mapCurrent(current);
+            state.bubble.animations.currentAnim.speed = mapCurrent(current);
         } else {
             state.robot.animations.play('turningOn');
             state.robot.animations.currentAnim.speed = 10;
@@ -315,6 +325,8 @@ function stopAnimate(state) {
     if (state.robot != null) {
         state.robot.animations.stop();
         state.robot.frame = 0;
+        state.heart.frame = 0;
+        state.bubble.visible = false;
     }
 }
 
@@ -340,13 +352,13 @@ function makePipes(state) {
     pipes.push(new Pipe(startx + 440, starty + 100, state, 'elbow3', false, false));
     pipes.push(new Pipe(startx + 400, starty - 50, state, 'elbow2', false, false));
     pipes.push(new Pipe(startx + 50, starty - 50, state, 'elbow1', false, false));
-
+    //mill pipe
     pipes.push(new Pipe(startx + 440, starty + 50, state, 'pipe', false, false));
 
     pipes.push(new Pipe(startx + 150, starty - 50, state, 'pipeh', false, false));
     pipes.push(new Pipe(startx + 100, starty - 50, state, 'pipeh', false, false));
     //pipes.push(new Pipe(startx+200, starty-50, state, 'pipeh', false));
-    pipes.push(new Pipe(startx + 250, starty - 50, state, 'pipeh', false, false));
+    //pipes.push(new Pipe(startx+250, starty-50, state, 'pipeh', false, false));
     pipes.push(new Pipe(startx + 300, starty - 50, state, 'pipeh', false, false));
     pipes.push(new Pipe(startx + 350, starty - 50, state, 'pipeh', false, false));
 
