@@ -46,6 +46,9 @@ var Level0 = (function (_Play) {
 
             this.upArrow;
             this.downArrow;
+
+            this.createConditions();
+            this.targetCurrent = 2; //amperes
         }
     }, {
         key: 'setToolbox',
@@ -99,6 +102,9 @@ var Level2 = (function (_Play2) {
 
             this.upArrow;
             this.downArrow;
+
+            this.createConditions();
+            this.targetCurrent = 2; //amperes
         }
     }, {
         key: 'createCircuit',
@@ -157,6 +163,9 @@ var Level3 = (function (_Level2) {
 
             this.upArrow;
             this.downArrow;
+
+            this.createConditions();
+            this.targetCurrent = 2; //amperes
         }
     }, {
         key: 'createCircuit',
@@ -232,6 +241,9 @@ var Level4 = (function (_Level3) {
 
             this.upArrow;
             this.downArrow;
+
+            this.createConditions();
+            this.targetCurrent = 2; //amperes
         }
     }, {
         key: 'createCircuit',

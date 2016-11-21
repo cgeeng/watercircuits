@@ -5,9 +5,9 @@ class Boot extends Phaser.State {
         game.load.image('source', 'resources/assets/source.png');
         game.load.image('sink', 'resources/assets/sink.png');
         game.load.image('elbow1', 'resources/assets/elbow1.png');
-        game.load.image('elbow2', 'resources/assets/elbow2.png');
-        game.load.image('elbow4', 'resources/assets/elbow4.png');
-        game.load.image('elbow3', 'resources/assets/elbow3.png');
+        game.load.spritesheet('elbow2', 'resources/assets/elbow2sheet.png', WIDTH, HEIGHT);
+        game.load.spritesheet('elbow4', 'resources/assets/elbow4sheet.png', WIDTH, HEIGHT);
+        game.load.spritesheet('elbow3', 'resources/assets/elbow3sheet.png', WIDTH, HEIGHT);
         game.load.spritesheet('pump', 'resources/assets/pumpsheet.png', 100, 100);
         game.load.spritesheet('pipe', 'resources/assets/pipesheet.png', WIDTH, HEIGHT);
         game.load.spritesheet('pipeh', 'resources/assets/pipehsheet.png', WIDTH, HEIGHT);
@@ -121,7 +121,8 @@ class Play extends Phaser.State {
             this.LEDText.destroy();
             this.LEDLabel.destroy();
         }
-
+        
+        this.victoryText.destroy();
         game.state.start('LevelSelect');
     }
 
@@ -163,14 +164,19 @@ class Play extends Phaser.State {
       
     this.upArrow;
     this.downArrow;
-      
-    this.setFailure();
+    
+    this.createConditions();
+    this.targetCurrent = 2; //amperes
+    
 
   }
     update() {
         if ( this.pipes[0].isConnectedSink ) {
             //this.text.text = "WATER RUN";
             animatePipes(this);
+            if (this.mill.current == this.targetCurrent) {
+                this.setVictory();
+            }
         } else {
             //this.text.text = "WATER NO RUN";
             stopAnimate(this);
@@ -190,20 +196,22 @@ class Play extends Phaser.State {
                 this.resistorText2.y = this.resistor2.y - 10;
             }
         }
-        
-        
-
+      
     }
     
     setFailure() {
         this.failureText = new displayText(this.game, 350, 250, "");
     }
     
+    setVictory() {
+        this.victoryText.text = "CONGRATS!!!";
+    }
+    
     updateLabelPosition() {
         //Moves resistor labels to where resistor position is
     }
 
-toggleCircuit() {
+    toggleCircuit() {
     
     if (this.circuit.alpha != 1) {
         this.white.alpha = 0.8;
@@ -217,6 +225,11 @@ toggleCircuit() {
         this.math.alpha = 0;
     }
         
+}
+createConditions() {
+    this.victoryText = new RainbowText(this.game, 350,150,"");
+    this.add.existing(this.victoryText);
+    
 }
 createButtons() {
     //buttons

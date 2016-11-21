@@ -25,9 +25,9 @@ var Boot = (function (_Phaser$State) {
             game.load.image('source', 'resources/assets/source.png');
             game.load.image('sink', 'resources/assets/sink.png');
             game.load.image('elbow1', 'resources/assets/elbow1.png');
-            game.load.image('elbow2', 'resources/assets/elbow2.png');
-            game.load.image('elbow4', 'resources/assets/elbow4.png');
-            game.load.image('elbow3', 'resources/assets/elbow3.png');
+            game.load.spritesheet('elbow2', 'resources/assets/elbow2sheet.png', WIDTH, HEIGHT);
+            game.load.spritesheet('elbow4', 'resources/assets/elbow4sheet.png', WIDTH, HEIGHT);
+            game.load.spritesheet('elbow3', 'resources/assets/elbow3sheet.png', WIDTH, HEIGHT);
             game.load.spritesheet('pump', 'resources/assets/pumpsheet.png', 100, 100);
             game.load.spritesheet('pipe', 'resources/assets/pipesheet.png', WIDTH, HEIGHT);
             game.load.spritesheet('pipeh', 'resources/assets/pipehsheet.png', WIDTH, HEIGHT);
@@ -177,6 +177,7 @@ var Play = (function (_Phaser$State3) {
                 this.LEDLabel.destroy();
             }
 
+            this.victoryText.destroy();
             game.state.start('LevelSelect');
         }
     }, {
@@ -222,7 +223,8 @@ var Play = (function (_Phaser$State3) {
             this.upArrow;
             this.downArrow;
 
-            this.setFailure();
+            this.createConditions();
+            this.targetCurrent = 2; //amperes
         }
     }, {
         key: 'update',
@@ -230,6 +232,9 @@ var Play = (function (_Phaser$State3) {
             if (this.pipes[0].isConnectedSink) {
                 //this.text.text = "WATER RUN";
                 animatePipes(this);
+                if (this.mill.current == this.targetCurrent) {
+                    this.setVictory();
+                }
             } else {
                 //this.text.text = "WATER NO RUN";
                 stopAnimate(this);
@@ -256,6 +261,11 @@ var Play = (function (_Phaser$State3) {
             this.failureText = new displayText(this.game, 350, 250, "");
         }
     }, {
+        key: 'setVictory',
+        value: function setVictory() {
+            this.victoryText.text = "CONGRATS!!!";
+        }
+    }, {
         key: 'updateLabelPosition',
         value: function updateLabelPosition() {
             //Moves resistor labels to where resistor position is
@@ -275,6 +285,12 @@ var Play = (function (_Phaser$State3) {
                 this.circuitButton.frame = 0;
                 this.math.alpha = 0;
             }
+        }
+    }, {
+        key: 'createConditions',
+        value: function createConditions() {
+            this.victoryText = new RainbowText(this.game, 350, 150, "");
+            this.add.existing(this.victoryText);
         }
     }, {
         key: 'createButtons',

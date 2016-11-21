@@ -27,6 +27,9 @@ class Level0 extends Play {
 
         this.upArrow;
         this.downArrow;
+        
+        this.createConditions();
+        this.targetCurrent = 2; //amperes
     }
     
     setToolbox() {
@@ -68,6 +71,9 @@ class Level2 extends Play {
         
         this.upArrow;
         this.downArrow;
+        
+        this.createConditions();        
+        this.targetCurrent = 2; //amperes
   }
     
     createCircuit() {
@@ -113,6 +119,9 @@ class Level3 extends Level2 {
         
         this.upArrow;
         this.downArrow;
+        
+        this.createConditions();        
+        this.targetCurrent = 2; //amperes
 
   }
     createCircuit() {
@@ -174,6 +183,9 @@ class Level4 extends Level3 {
         
         this.upArrow;
         this.downArrow;
+        
+        this.createConditions();       
+        this.targetCurrent = 2; //amperes
 
   }
     createCircuit() {

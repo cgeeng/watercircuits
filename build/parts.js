@@ -14,7 +14,7 @@ var HEIGHT = 50;
 var Pipe = (function (_Phaser$Sprite) {
     _inherits(Pipe, _Phaser$Sprite);
 
-    function Pipe(x, y, state, sprite, draggable) {
+    function Pipe(x, y, state, sprite, draggable, reverse) {
         _classCallCheck(this, Pipe);
 
         _get(Object.getPrototypeOf(Pipe.prototype), 'constructor', this).call(this, game, x, y, sprite);
@@ -22,7 +22,9 @@ var Pipe = (function (_Phaser$Sprite) {
         this.h = HEIGHT;
         this.state = state;
 
-        this.animations.add('on', [1, 2], 10, true);
+        if (!reverse) {
+            this.animations.add('on', [1, 2, 3, 4], 10, true);
+        } else this.animations.add('on', [4, 3, 2, 1], 10, true);
 
         this.isConnectedSource = false;
         this.isConnectedSink = false;
@@ -53,6 +55,7 @@ var Mill = (function (_Phaser$Sprite2) {
         this.h = HEIGHT * 2;
         this.state = state;
         this.maxSpeed = this.state.pump.voltage;
+        this.current = 0;
 
         this.animations.add('on', [1, 2, 3, 4, 5, 6, 7], this.maxSpeed, true);
 
@@ -60,10 +63,12 @@ var Mill = (function (_Phaser$Sprite2) {
         this.isConnectedSink = false;
 
         //Drag functions
+        /*
         this.inputEnabled = true;
         this.input.enableDrag();
-        this.input.enableSnap(WIDTH / 2, HEIGHT / 2, false, true);
+        this.input.enableSnap(WIDTH/2, HEIGHT/2, false, true);
         this.events.onDragStop.add(state.updateConnection, state);
+        */
 
         //Keep pipe count
         this.id = state.pipeCount;
@@ -264,15 +269,19 @@ function animatePipes(state) {
     //Check if resistor in circuit
     var resistance = checkResistance(state);
     var current = setCurrent(state, resistance);
+    state.mill.current = current;
     //console.log(current);
     for (var i in pipes) {
         //I only have animation files for 2 types, i gotta fix this shit up lol
-        if (pipes[i].key == 'pipe' || pipes[i].key == 'pipeh' || pipes[i].key == 'mill' || pipes[i].key == 'resistor' || pipes[i].key == 'resistor2') {
+        if (pipes[i].key != 'elbow1') {
             //if connected to source
-            if (pipes[i].isConnectedSource) pipes[i].animations.play('on');
+            if (pipes[i].isConnectedSource) {
+                pipes[i].animations.play('on');
+            }
         }
     }
     state.pump.animations.play('on');
+    state.pump.animations.currentAnim.speed = mapCurrent(current);
 
     if (robot != null) {
         //Animate robot shit
@@ -281,7 +290,7 @@ function animatePipes(state) {
         } else if (current <= robot.maxCurrent) {
             state.robot.animations.play('turningOn');
             console.log(current);
-            console.log(mapCurrent(current));
+            //console.log(mapCurrent(current));
             state.robot.animations.currentAnim.speed = mapCurrent(current);
         } else {
             state.robot.animations.play('turningOn');
@@ -294,7 +303,7 @@ function stopAnimate(state) {
     var pipes = state.pipes;
     for (var i in pipes) {
         //I only have animation files for 2 types
-        if (pipes[i].key == 'pipe' || pipes[i].key == 'pipeh' || pipes[i].key == 'mill' || pipes[i].key == 'resistor' || pipes[i].key == 'resistor2') {
+        if (pipes[i].key != 'elbow1') {
             //if connected to source
             pipes[i].animations.stop();
             //Sets to no water marks
@@ -319,27 +328,27 @@ function makePipes(state) {
     state.pump = new Pump(startx + 75, starty + 50, state);
     //  Make pipe
 
-    pipes.push(new Pipe(startx + 50, starty + 100, state, 'elbow4', false));
-    pipes.push(new Pipe(startx + 100, starty + 100, state, 'pipeh', false));
-    pipes.push(new Pipe(startx + 150, starty + 100, state, 'pipeh', false));
-    pipes.push(new Pipe(startx + 200, starty + 100, state, 'pipeh', false));
-    pipes.push(new Pipe(startx + 250, starty + 100, state, 'pipeh', false));
-    pipes.push(new Pipe(startx + 300, starty + 100, state, 'pipeh', false));
-    pipes.push(new Pipe(startx + 350, starty + 100, state, 'pipeh', false));
-    pipes.push(new Pipe(startx + 400, starty + 100, state, 'pipeh', false));
+    pipes.push(new Pipe(startx + 50, starty + 100, state, 'elbow4', false, false));
+    pipes.push(new Pipe(startx + 100, starty + 100, state, 'pipeh', false, true));
+    pipes.push(new Pipe(startx + 150, starty + 100, state, 'pipeh', false, true));
+    pipes.push(new Pipe(startx + 200, starty + 100, state, 'pipeh', false, true));
+    pipes.push(new Pipe(startx + 250, starty + 100, state, 'pipeh', false, true));
+    pipes.push(new Pipe(startx + 300, starty + 100, state, 'pipeh', false, true));
+    pipes.push(new Pipe(startx + 350, starty + 100, state, 'pipeh', false, true));
+    pipes.push(new Pipe(startx + 400, starty + 100, state, 'pipeh', false, true));
 
-    pipes.push(new Pipe(startx + 440, starty + 100, state, 'elbow3', false));
-    pipes.push(new Pipe(startx + 400, starty - 50, state, 'elbow2', false));
-    pipes.push(new Pipe(startx + 50, starty - 50, state, 'elbow1', false));
+    pipes.push(new Pipe(startx + 440, starty + 100, state, 'elbow3', false, false));
+    pipes.push(new Pipe(startx + 400, starty - 50, state, 'elbow2', false, false));
+    pipes.push(new Pipe(startx + 50, starty - 50, state, 'elbow1', false, false));
 
-    pipes.push(new Pipe(startx + 440, starty + 50, state, 'pipe', false));
+    pipes.push(new Pipe(startx + 440, starty + 50, state, 'pipe', false, false));
 
-    pipes.push(new Pipe(startx + 150, starty - 50, state, 'pipeh', false));
-    pipes.push(new Pipe(startx + 100, starty - 50, state, 'pipeh', false));
+    pipes.push(new Pipe(startx + 150, starty - 50, state, 'pipeh', false, false));
+    pipes.push(new Pipe(startx + 100, starty - 50, state, 'pipeh', false, false));
     //pipes.push(new Pipe(startx+200, starty-50, state, 'pipeh', false));
-    pipes.push(new Pipe(startx + 250, starty - 50, state, 'pipeh', false));
-    pipes.push(new Pipe(startx + 300, starty - 50, state, 'pipeh', false));
-    pipes.push(new Pipe(startx + 350, starty - 50, state, 'pipeh', false));
+    pipes.push(new Pipe(startx + 250, starty - 50, state, 'pipeh', false, false));
+    pipes.push(new Pipe(startx + 300, starty - 50, state, 'pipeh', false, false));
+    pipes.push(new Pipe(startx + 350, starty - 50, state, 'pipeh', false, false));
 
     state.mill = new Mill(startx + 375, starty, state);
 
