@@ -232,7 +232,7 @@ function increaseVoltage(sprite, pointer) {
 function decreaseVoltage(sprite, pointer) {
 
     var pump = this.pump;
-    if (pump.voltage >= 1) {
+    if (pump.voltage >= 2.1) {
         pump.scale.setTo(pump.scale.x - 0.05, pump.scale.y - 0.05);
         pump.voltage -= 2;
     }
@@ -264,6 +264,11 @@ function setCurrent(state, resistance) {
 }
 
 function animatePipes(state) {
+
+    //music
+    state.water.play();
+    state.water.mute = false;
+
     var pipes = state.pipes;
     var robot = state.robot;
     //Check if resistor in circuit
@@ -272,8 +277,8 @@ function animatePipes(state) {
     state.mill.current = current;
     //console.log(current);
     for (var i in pipes) {
-        //I only have animation files for 2 types, i gotta fix this shit up lol
-        if (pipes[i].key != 'elbow1') {
+        //don't have animation for these
+        if (pipes[i].key != 'elbow1' && pipes[i].key != 'circuitResistor' && pipes[i].key != 'wire') {
             //if connected to source
             if (pipes[i].isConnectedSource) {
                 pipes[i].animations.play('on');
@@ -307,13 +312,18 @@ function animatePipes(state) {
             state.robot.animations.currentAnim.speed = 10;
         }
     }
+    //lightbulb
+    if (state.bulb != null) {
+        if (current > robot.maxCurrent) state.bulb.frame = 5;else if (current <= robot.maxCurrent / 8) state.bulb.frame = 1;else if (current <= robot.maxCurrent / 4) state.bulb.frame = 2;else if (current <= robot.maxCurrent / 2) state.bulb.frame = 3;else if (current <= 3 * robot.maxCurrent / 4) state.bulb.frame = 4;
+    }
 }
 
 function stopAnimate(state) {
+    state.water.mute = true;
     var pipes = state.pipes;
     for (var i in pipes) {
         //I only have animation files for 2 types
-        if (pipes[i].key != 'elbow1') {
+        if (pipes[i].key != 'elbow1' && pipes[i].key != 'circuitResistor' && pipes[i].key != 'wire') {
             //if connected to source
             pipes[i].animations.stop();
             //Sets to no water marks
@@ -328,6 +338,9 @@ function stopAnimate(state) {
         state.heart.frame = 0;
         state.bubble.visible = false;
     }
+
+    //lightbulb
+    if (state.bulb != null) state.bulb.frame = 0;
 }
 
 function makePipes(state) {

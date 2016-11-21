@@ -8,6 +8,7 @@ class Level0 extends Play {
         game.canvas.oncontextmenu = function (e) { e.preventDefault(); }
         this.add.sprite(0,0,'sky');
         this.add.sprite(0,0,'overlay');
+        this.add.sprite(200,80,'speechBubble'); 
 
         //make an UNDIRECTED GRAAAAAPH!!!!
         this.g = new graphlib.Graph({ directed: false}); //{ directed: false}
@@ -29,13 +30,17 @@ class Level0 extends Play {
         this.downArrow;
         
         this.createConditions();
-        this.targetCurrent = 2; //amperes
+        this.targetCurrent = 1.5; //amperes
     }
     
     setToolbox() {
         let draggable = new Pipe(200, 425, this, 'pipeh', true);
         draggable.input.useHandCursor = true;
         addToState(this, draggable);
+                    
+        let draggable2 = new Pipe(120, 425, this, 'pipeh', true);
+        draggable2.input.useHandCursor = true;
+        addToState(this, draggable2);
     }
 }
 
@@ -48,7 +53,8 @@ class Level2 extends Play {
           //prevents popup on right click
         game.canvas.oncontextmenu = function (e) { e.preventDefault(); }
         this.add.sprite(0,0,'sky');
-
+        this.add.sprite(200,80,'speechBubble'); 
+        this.bubbleText = game.add.text(220, 110, "", { font: "15px Calibri", fill: "#000", align: "center", });
         //ROBOT STUFF
         this.makeRobot();
         //make an UNDIRECTED GRAAAAAPH!!!!
@@ -95,7 +101,7 @@ class Level3 extends Level2 {
           //prevents popup on right click
         game.canvas.oncontextmenu = function (e) { e.preventDefault(); }
         this.add.sprite(0,0,'sky');
-
+        this.add.sprite(200,80,'speechBubble'); 
         //ROBOT STUFF
         this.makeRobot();
         //make an UNDIRECTED GRAAAAAPH!!!!
@@ -115,6 +121,8 @@ class Level3 extends Level2 {
         this.createButtons();
         this.initEdges();
         
+        this.bubbleText = game.add.text(220, 110, "", { font: "15px Calibri", fill: "#000", align: "center", });
+        
         this.upArrow;
         this.downArrow;
         
@@ -129,12 +137,22 @@ class Level3 extends Level2 {
     
     setToolbox() {
         this.add.sprite(0,0,'overlay');
+        /*
         let draggable = new Pipe(40, 425, this, 'pipeh', true);
         draggable.input.useHandCursor = true;
         addToState(this, draggable);
-        this.resistor1 = new Resistor(140, 450, this, 'circuitResistor', 10);
+        
+        let draggable2 = new Pipe(120, 425, this, 'pipeh', true);
+        draggable2.input.useHandCursor = true;
+        addToState(this, draggable2);
+        */
+        
+        this.resistor0 = new Resistor(40, 450, this, 'wire', 1);
+        addToState(this, this.resistor0);
+        
+        this.resistor1 = new Resistor(200, 450, this, 'circuitResistor', 10);
         addToState(this, this.resistor1);
-        this.resistor2 = new Resistor(250, 450, this, 'circuitResistor', 20);
+        this.resistor2 = new Resistor(350, 450, this, 'circuitResistor', 20);
         addToState(this, this.resistor2);
         this.createResistor();
     }
@@ -157,7 +175,7 @@ class Level4 extends Level3 {
           //prevents popup on right click
         game.canvas.oncontextmenu = function (e) { e.preventDefault(); }
         this.add.sprite(0,0,'sky');
-
+        
         //ROBOT STUFF
         this.makeRobot();
         //make an UNDIRECTED GRAAAAAPH!!!!
@@ -173,6 +191,8 @@ class Level4 extends Level3 {
         //this.text = this.add.text(0, 0, "are the pipes fudgin connected", {fill: "#ff0044"});
         addPipes(this);
         this.createCircuit();
+        this.add.sprite(200,80,'speechBubble'); 
+        this.bubbleText = game.add.text(220, 110, "", { font: "15px Calibri", fill: "#000", align: "center", });
         this.setToolbox();
         this.createButtons();
         this.createLED();
@@ -191,8 +211,8 @@ class Level4 extends Level3 {
     }
     
     createLED() {
-        this.LEDLabel = new displayText(this.game, 400, 220, "Max Current: 15amps");
+        this.bulb = this.add.sprite(420,220,'bulb');
+        this.LEDLabel = new displayText(this.game, 400, this.bulb.y-15, "Max Current: 15amps");
         this.LEDText = new displayText(this.game, 500, 290, "0amps");
-
     }
 }

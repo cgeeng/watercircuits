@@ -27,14 +27,19 @@ class Boot extends Phaser.State {
         game.load.image('white', 'resources/assets/ui/white.png');
         game.load.image('circuit', 'resources/assets/ui/circuit.png');
         game.load.image('math', 'resources/assets/ui/math.png');
-        game.load.spritesheet('circuitButton', 'resources/assets/ui/buttonsheet.png', 117, 45);
         game.load.image('cover1', 'resources/assets/circuit/cover1.png');
         game.load.image('cover2', 'resources/assets/circuit/cover2.png');
         game.load.image('cover3', 'resources/assets/circuit/cover3.png');
         game.load.image('circuitResistor', 'resources/assets/circuit/resistor.png');
+        game.load.image('wire', 'resources/assets/circuit/wire.png');
+        game.load.spritesheet('bulb', 'resources/assets/circuit/bulbsheet.png', 100, 100);
         
-        game.load.image('exit', 'resources/assets/ui/exit.png');
-        game.load.spritesheet('arrow', 'resources/assets/ui/arrow.png', 50, 50);
+        game.load.spritesheet('exit', 'resources/assets/ui/exit.png', 50, 50);
+        game.load.spritesheet('arrow', 'resources/assets/ui/arrowsheet.png', 50, 50);
+        
+        game.load.audio('water', 'resources/assets/sound/water.wav');
+        game.load.spritesheet('figure', 'resources/assets/figuresheet.png', 74, 93);
+        game.load.image('speechBubble', 'resources/assets/speechbubble.png');
     }
 
 	create() {
@@ -123,7 +128,7 @@ class Play extends Phaser.State {
             this.LEDText.destroy();
             this.LEDLabel.destroy();
         }
-        
+        this.water.destroy();
         this.victoryText.destroy();
         game.state.start('LevelSelect');
     }
@@ -132,7 +137,8 @@ class Play extends Phaser.State {
       //prevents popup on right click
     game.canvas.oncontextmenu = function (e) { e.preventDefault(); }
     this.add.sprite(0,0,'sky');
-      
+    this.add.sprite(200,80,'speechBubble');    
+    this.bubbleText = game.add.text(220, 110, "Reach this", { font: "15px Calibri", fill: "#000", align: "center", });
     //ROBOT STUFF
     this.makeRobot();
     //make an UNDIRECTED GRAAAAAPH!!!!
@@ -151,24 +157,11 @@ class Play extends Phaser.State {
     this.createButtons();
     this.initEdges();
       
-        //CIRCUIT OVERLAY
-    this.circuitButton = this.add.sprite(546,455,'circuitButton')
-    this.circuitButton.inputEnabled = true;
-    this.circuitButton.input.useHandCursor = true;
-    this.circuitButton.events.onInputDown.add(this.toggleCircuit, this);
-    this.white = this.add.sprite(0,0,'white'); 
-    this.circuit = this.add.sprite(0,0,'circuit');
-    this.math = this.add.sprite(0,0,'math');
-    this.white.alpha = 0;
-    this.circuit.alpha = 0;
-    this.math.alpha = 0;
-      
     this.upArrow;
     this.downArrow;
-    
-    this.createConditions();
-    this.targetCurrent = 2; //amperes
-    
+
+    this.targetCurrent = 0.8; //amperes        
+    this.createConditions();    
 
   }
     update() {
@@ -205,14 +198,14 @@ class Play extends Phaser.State {
         this.heart = this.add.sprite(0,0,'heart');
         this.bubble = this.add.sprite(0,0, 'bubble');
         this.bubble.visible = false;
-        this.bubble.animations.add('on', [0,1, 2, 3], 10, true);
+        this.bubble.animations.add('on', [0,1, 2,3], 10, true);
     }
     setFailure() {
         this.failureText = new displayText(this.game, 350, 250, "");
     }
     
     setVictory() {
-        this.victoryText.text = "CONGRATS!!!";
+        this.bubbleText.text = "CONGRATS!!!";
     }
     
     updateLabelPosition() {
@@ -238,20 +231,22 @@ createConditions() {
     this.victoryText = new RainbowText(this.game, 350,150,"");
     this.add.existing(this.victoryText);
     
+    this.water = game.add.audio('water');
+    this.figure = game.add.sprite(620,150,'figure');
+    this.figure.animations.add('blink', [0,1], 0.5, true);
+    this.figure.animations.play('blink');
+    
+    this.bubbleText.text = "Careful not to run it too fast."
+    
 }
 createButtons() {
     //buttons
-    this.exit = this.add.sprite(10,10, 'exit');
-    this.exit.inputEnabled = true;
-    this.exit.input.useHandCursor = true;
-    this.exit.events.onInputUp.add(this.back, this);
-    
-    console.log("whatup");
-    
-    this.upArrow = game.add.button(150, 250, 'arrow', increaseVoltage, this, 0, 0, 0);
+    this.exit = game.add.button(10, 10, 'exit', this.back, this, 1, 0);
+
+    this.upArrow = game.add.button(150, 250, 'arrow', increaseVoltage, this, 1, 0, 3);
     this.upArrow.input.useHandCursor = true;
     
-    this.downArrow = game.add.button(50, 250, 'arrow', decreaseVoltage, this, 0, 0, 0);
+    this.downArrow = game.add.button(50, 250, 'arrow', decreaseVoltage, this, 1, 0, 3);
     this.downArrow.input.useHandCursor = true;
     this.downArrow.anchor.setTo(1, 1);
     this.downArrow.angle += 180;
@@ -268,8 +263,8 @@ setToolbox() {
     draggable2.input.useHandCursor = true;
     addToState(this, draggable2);
     
-    addToState(this, new Resistor(200, 425, this, 'resistor', 20));
-    addToState(this, new Resistor(350, 425, this, 'resistor2', 50));
+    addToState(this, new Resistor(200, 425, this, 'resistor', 10));
+    addToState(this, new Resistor(350, 425, this, 'resistor2', 20));
 }
 
 initEdges() {    
