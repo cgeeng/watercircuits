@@ -343,7 +343,7 @@ class Level7 extends Level6 {
         addPipes(this);
         this.createCircuit();
         this.add.sprite(200,80,'speechBubble'); 
-        this.bubbleText = game.add.text(220, 105, 'Get near 0.3 amps without burning the bulb. \n Volts = Current / Resistance', { font: "15px Calibri", fill: "#000", align: "center", });
+        this.bubbleText = game.add.text(220, 105, 'Get near 0.3 amps without burning the bulb. \n Volts = Current * Resistance', { font: "15px Calibri", fill: "#000", align: "center", });
         this.setToolbox();
         this.createButtons();
         this.createLED();
@@ -372,6 +372,7 @@ class Level8 extends Level7 {
         super();
     }
         create() {
+        game.add.plugin(Fabrique.Plugins.InputField);
           //prevents popup on right click
         game.canvas.oncontextmenu = function (e) { e.preventDefault(); }
         this.add.sprite(0,0,'sky');
@@ -392,23 +393,46 @@ class Level8 extends Level7 {
         addPipes(this);
         this.createCircuit();
         this.add.sprite(200,80,'speechBubble'); 
-        this.bubbleText = game.add.text(220, 105, 'Get near 0.3 amps without burning the bulb. \n Volts = Current / Resistance', { font: "15px Calibri", fill: "#000", align: "center", });
+                this.targetCurrent = 2; //amperes
+        this.bubbleText = game.add.text(220, 105, 'Get ' + this.targetCurrent + ' amps without burning the bulb. \n Volts = Current * Resistance', { font: "15px Calibri", fill: "#000", align: "center", });
         this.setToolbox();
         this.createButtons();
         this.createLED();
+        this.robot.maxCurrent = 4; 
+        this.LEDLabel.text = "Max Current: " + this.robot.maxCurrent  + " amps";
         this.initEdges();
         
         this.upArrow;
         this.downArrow;
         
-        this.createConditions();       
-        this.targetCurrent = 0.3; //amperes
-            game.add.plugin(Fabrique.Plugins.InputField);
-            this.input = game.add.inputField(10, 90);
+        this.createConditions();    
+
+        this.upArrow.visible = false;
+        this.downArrow.visible = false;
+        
+        this.setInputs();
 
   }
+    setInputs() {
+        /*
+        this.resistanceInput = game.add.inputField(210, 230, {
+            font: '15px Arial',
+            fill: '#212121',
+            fontWeight: 'bold',
+            width: 80,
+            padding: 8,
+            borderWidth: 1,
+            borderColor: '#000',
+            borderRadius: 6,
+            placeHolder: 'Resistance',
+        });
+        */
+        
+        //this.resistanceText = new displayText(this.game, 310, 233, "Ohms");
+    }
+    
     updateLabels() {
-        console.log(this.input.text.text);
+       this.resistor1.resistance = this.resistorLabel1.text.text;
     }
     setVictory() {
         this.bubbleText.text = "CONGRATS!!!";
@@ -418,4 +442,35 @@ class Level8 extends Level7 {
         this.surveyButton = game.add.button(100, 170, 'survey', function() {   window.open("http://www.google.com", "_blank");}, this, 1, 0, 1);
         this.surveyButton.input.useHandCursor = true;
     }
+    setToolbox() {
+        this.add.sprite(0,0,'overlay');
+
+        this.resistor1 = new Resistor(200, 400, this, 'circuitResistor', 10);
+        addToState(this, this.resistor1);
+        this.createResistor();
+    }
+    
+    createResistor() {
+        this.resistorLabel1 = game.add.inputField(210, 230, {
+            font: '15px Arial',
+            fill: '#212121',
+            fontWeight: 'bold',
+            width: 80,
+            padding: 8,
+            borderWidth: 1,
+            borderColor: '#000',
+            borderRadius: 6,
+            placeHolder: 'Resistance',
+        });
+        this.resistorText1 = new displayText(this.game, this.resistorLabel1.x + 100, this.resistorLabel1.y+3, " Ohms");
+
+    }
+    
+    setFailure() {
+        //this.failureText = new displayText(this.game, 350, 250, "");
+        this.bubbleText.text = 'Get ' + this.targetCurrent + ' Amps.\n 6 Volts = 2 Amps * Resistance';
+        this.resetButton.visible = false;
+        this.nextButton.visible = false;
+    }
+
 }

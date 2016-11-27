@@ -31,6 +31,7 @@ class Boot extends Phaser.State {
         game.load.image('cover1', 'resources/assets/circuit/cover1.png');
         game.load.image('cover2', 'resources/assets/circuit/cover2.png');
         game.load.image('cover3', 'resources/assets/circuit/cover3.png');
+        game.load.image('cover4', 'resources/assets/circuit/cover4.png');
         game.load.image('circuitResistor', 'resources/assets/circuit/resistor.png');
         game.load.image('wire', 'resources/assets/circuit/wire.png');
         game.load.spritesheet('bulb', 'resources/assets/circuit/bulbsheet.png', 100, 100);
@@ -158,6 +159,9 @@ class Play extends Phaser.State {
         if (this.bubbleText != null) {
             this.bubbleText.destroy();
         }
+        if (this.resistorText != null) {
+            this.resistorText.destroy();
+        }
         this.water.destroy();
         this.victoryText.destroy();
     }
@@ -201,10 +205,13 @@ class Play extends Phaser.State {
         if ( this.pipes[0].isConnectedSink ) {
             //this.text.text = "WATER RUN";
             animatePipes(this);
-            if (this.targetCurrent != null) {
+            if (this.targetCurrent != null && this.key != "Level8") {
                 if (this.mill.current <= this.targetCurrent*1.25 && this.mill.current >= this.targetCurrent*0.75) this.setVictory();
                 else if (this.mill.current >= this.robot.maxCurrent) this.setFailure();
-            } else this.setVictory();
+            } else if (this.targetCurrent != null && this.key == "Level8") {
+                if (this.mill.current == this.targetCurrent) this.setVictory();
+                else if (this.mill.current >= this.robot.maxCurrent) this.setFailure();
+            } 
 
         } else {
             //this.text.text = "WATER NO RUN";
@@ -214,11 +221,23 @@ class Play extends Phaser.State {
         //update resistor group position
         if (this.resistorLabel1 != null) {
             if (game.input.onUp != true) {
-                this.resistorLabel1.x = this.resistor1.x - 20;
-                this.resistorLabel1.y = this.resistor1.y - 30;
-                this.resistorText1.x = this.resistor1.x;
-                this.resistorText1.y = this.resistor1.y - 10;
-                
+                if (this.key != "Level8") {
+                    //If NOT LEVEL 8
+                    this.resistorLabel1.x = this.resistor1.x - 20;
+                    this.resistorLabel1.y = this.resistor1.y - 30;
+                    this.resistorText1.x = this.resistor1.x;
+                    this.resistorText1.y = this.resistor1.y - 10;
+                } else {
+                    this.resistorLabel1.x = this.resistor1.x - 20;
+                    this.resistorLabel1.y = this.resistor1.y + 45;
+                    this.resistorText1.x = this.resistorLabel1.x + 93;
+                    this.resistorText1.y = this.resistorLabel1.y+8;
+                }
+
+            }
+        }
+        if (this.resistorLabel2 != null) {
+            if (game.input.onUp != true) {    
                 this.resistorLabel2.x = this.resistor2.x - 20;
                 this.resistorLabel2.y = this.resistor2.y - 30;
                 this.resistorText2.x = this.resistor2.x;
