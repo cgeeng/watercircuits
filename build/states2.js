@@ -491,6 +491,50 @@ var Level8 = (function (_Level7) {
     }
 
     _createClass(Level8, [{
+        key: 'create',
+        value: function create() {
+            //prevents popup on right click
+            game.canvas.oncontextmenu = function (e) {
+                e.preventDefault();
+            };
+            this.add.sprite(0, 0, 'sky');
+
+            //ROBOT STUFF
+            this.makeRobot();
+            //make an UNDIRECTED GRAAAAAPH!!!!
+            this.g = new graphlib.Graph({ directed: false }); //{ directed: false}
+            this.pipeCount = 2; //accounts for source and sink; 0 = source, 1 = sink 
+
+            this.pipes = [];
+            //this holds the weird pump
+            this.pump;
+            this.mill;
+            makePipes(this);
+
+            //this.text = this.add.text(0, 0, "are the pipes fudgin connected", {fill: "#ff0044"});
+            addPipes(this);
+            this.createCircuit();
+            this.add.sprite(200, 80, 'speechBubble');
+            this.bubbleText = game.add.text(220, 105, 'Get near 0.3 amps without burning the bulb. \n Volts = Current / Resistance', { font: "15px Calibri", fill: "#000", align: "center" });
+            this.setToolbox();
+            this.createButtons();
+            this.createLED();
+            this.initEdges();
+
+            this.upArrow;
+            this.downArrow;
+
+            this.createConditions();
+            this.targetCurrent = 0.3; //amperes
+            game.add.plugin(Fabrique.Plugins.InputField);
+            this.input = game.add.inputField(10, 90);
+        }
+    }, {
+        key: 'updateLabels',
+        value: function updateLabels() {
+            console.log(this.input.text.text);
+        }
+    }, {
         key: 'setVictory',
         value: function setVictory() {
             this.bubbleText.text = "CONGRATS!!!";
@@ -501,8 +545,6 @@ var Level8 = (function (_Level7) {
                 window.open("http://www.google.com", "_blank");
             }, this, 1, 0, 1);
             this.surveyButton.input.useHandCursor = true;
-
-            //let input = game.add.inputField(10, 90);
         }
     }]);
 

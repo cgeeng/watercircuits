@@ -286,7 +286,11 @@ var Play = (function (_Phaser$State3) {
                     this.resistorText2.y = this.resistor2.y - 10;
                 }
             }
+            this.updateLabels();
         }
+    }, {
+        key: 'updateLabels',
+        value: function updateLabels() {}
     }, {
         key: 'makeRobot',
         value: function makeRobot() {

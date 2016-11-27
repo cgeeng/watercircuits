@@ -225,8 +225,10 @@ class Play extends Phaser.State {
                 this.resistorText2.y = this.resistor2.y - 10;
             }
         }
+        this.updateLabels();
       
     }
+    updateLabels() {};
     makeRobot() {
         this.robot = new Robot(0,0, this, 'robot1'); 
         this.add.existing(this.robot);

@@ -1,7 +1,7 @@
 class Game extends Phaser.Game {
 
 	constructor() {
-		super(700, 500, Phaser.AUTO, 'content', null, false, false);
+		super(700, 500, Phaser.CANVAS, 'content', null, false, false);
 		this.state.add('Boot', Boot, false);
         this.state.add('LevelSelect', LevelSelect, false);
         this.state.add('Play', Play, false);
