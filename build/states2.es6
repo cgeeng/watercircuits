@@ -1,4 +1,4 @@
-class Level0 extends Play {
+class Level1 extends Play {
     constructor () {
         super();
     }
@@ -9,6 +9,7 @@ class Level0 extends Play {
         this.add.sprite(0,0,'sky');
         this.add.sprite(0,0,'overlay');
         this.add.sprite(200,80,'speechBubble'); 
+        this.bubbleText = game.add.text(220, 110, "Hello.", { font: "15px Calibri", fill: "#000", align: "center", });
 
         //make an UNDIRECTED GRAAAAAPH!!!!
         this.g = new graphlib.Graph({ directed: false}); //{ directed: false}
@@ -30,7 +31,8 @@ class Level0 extends Play {
         this.downArrow;
         
         this.createConditions();
-        this.targetCurrent = 1.5; //amperes
+        this.bubbleText.text = "Get the water mill running."
+        //this.targetCurrent = 1.5; //amperes
     }
     
     setToolbox() {
@@ -45,6 +47,155 @@ class Level0 extends Play {
 }
 
 class Level2 extends Play {
+      create() {
+      //prevents popup on right click
+    game.canvas.oncontextmenu = function (e) { e.preventDefault(); }
+    this.add.sprite(0,0,'sky');
+    this.add.sprite(0,0,'overlay');
+    this.add.sprite(200,80,'speechBubble');    
+    this.bubbleText = game.add.text(220, 105, 'The robot-bubble-machine runs \n on water.', { font: "15px Calibri", fill: "#000", align: "center", });
+    //ROBOT STUFF
+    this.makeRobot();
+    //make an UNDIRECTED GRAAAAAPH!!!!
+    this.g = new graphlib.Graph({ directed: false}); //{ directed: false}
+    this.pipeCount = 2; //accounts for source and sink; 0 = source, 1 = sink  
+    
+    this.pipes = [];
+    //this holds the weird pump
+    this.pump;
+    this.mill;
+    makePipes(this);
+      
+    //this.text = this.add.text(0, 0, "are the pipes fudgin connected", {fill: "#ff0044"});
+    addPipes(this);
+    this.setToolbox();
+    this.createButtons();
+    this.initEdges();
+      
+    this.upArrow;
+    this.downArrow;
+
+    this.targetCurrent = 1; //amperes        
+    this.createConditions();    
+
+  }
+    setToolbox() {
+        let draggable = new Pipe(200, 425, this, 'pipeh', true);
+        draggable.input.useHandCursor = true;
+        addToState(this, draggable);
+                    
+        let draggable2 = new Pipe(120, 425, this, 'pipeh', true);
+        draggable2.input.useHandCursor = true;
+        addToState(this, draggable2);
+    }
+}
+
+class Level3 extends Level2 {
+      create() {
+      //prevents popup on right click
+    game.canvas.oncontextmenu = function (e) { e.preventDefault(); }
+    this.add.sprite(0,0,'sky');
+    this.add.sprite(0,0,'overlay');
+    this.add.sprite(200,80,'speechBubble');    
+    this.bubbleText = game.add.text(220, 110, "Hello.", { font: "15px Calibri", fill: "#000", align: "center", });
+    //ROBOT STUFF
+    this.makeRobot();
+    //make an UNDIRECTED GRAAAAAPH!!!!
+    this.g = new graphlib.Graph({ directed: false}); //{ directed: false}
+    this.pipeCount = 2; //accounts for source and sink; 0 = source, 1 = sink  
+    
+    this.pipes = [];
+    //this holds the weird pump
+    this.pump;
+    this.mill;
+    makePipes(this);
+      
+    //this.text = this.add.text(0, 0, "are the pipes fudgin connected", {fill: "#ff0044"});
+    addPipes(this);
+    this.setToolbox();
+    this.createButtons();
+    this.initEdges();
+      
+    this.upArrow;
+    this.downArrow;
+
+    this.targetCurrent = .4; //amperes        
+    this.createConditions();
+
+  }
+    setToolbox() {
+        let draggable = new Pipe(200, 425, this, 'pipeh', true);
+        draggable.input.useHandCursor = true;
+        addToState(this, draggable);
+                    
+        let draggable2 = new Pipe(120, 425, this, 'pipeh', true);
+        draggable2.input.useHandCursor = true;
+        addToState(this, draggable2);
+    }
+    
+    makeRobot() {
+        this.robot = new Robot(0,0, this, 'robot2'); 
+        this.add.existing(this.robot);
+        this.heart = this.add.sprite(0,0,'heart');
+        this.bubble = this.add.sprite(0,0, 'bubble');
+        this.bubble.visible = false;
+        this.bubble.animations.add('on', [0,1, 2,3], 10, true);
+        this.robot.maxCurrent = 0.6;
+        this.bubbleText.text = "This robot can't take much water.";
+    }
+}
+
+class Level4 extends Level3 {
+      create() {
+      //prevents popup on right click
+    game.canvas.oncontextmenu = function (e) { e.preventDefault(); }
+    this.add.sprite(0,0,'sky');
+    this.add.sprite(0,0,'overlay');
+    this.add.sprite(200,80,'speechBubble');    
+    this.bubbleText = game.add.text(220, 110, "This robot can't take much water.", { font: "15px Calibri", fill: "#000", align: "center", });
+    //ROBOT STUFF
+    this.makeRobot();
+    //make an UNDIRECTED GRAAAAAPH!!!!
+    this.g = new graphlib.Graph({ directed: false}); //{ directed: false}
+    this.pipeCount = 2; //accounts for source and sink; 0 = source, 1 = sink  
+    
+    this.pipes = [];
+    //this holds the weird pump
+    this.pump;
+    this.mill;
+    makePipes(this);
+      
+    //this.text = this.add.text(0, 0, "are the pipes fudgin connected", {fill: "#ff0044"});
+    addPipes(this);
+    this.setToolbox();
+    this.createButtons();
+          this.upArrow.visible = false;
+          this.downArrow.visible = false;
+    this.initEdges();
+      
+    this.upArrow;
+    this.downArrow;
+
+    this.targetCurrent = .4; //amperes        
+    this.createConditions();
+
+  }
+    setToolbox() {
+        this.add.sprite(0,0,'overlay');
+        let draggable = new Pipe(40, 425, this, 'pipeh', true);
+        draggable.input.useHandCursor = true;
+        addToState(this, draggable);
+
+        let draggable2 = new Pipe(120, 425, this, 'pipeh', true);
+        draggable2.input.useHandCursor = true;
+        addToState(this, draggable2);
+
+        addToState(this, new Resistor(200, 425, this, 'resistor', 10));
+        addToState(this, new Resistor(350, 425, this, 'resistor2', 15));
+    }
+}
+
+class Level5 extends Play {
     constructor () {
         super();
     }
@@ -54,7 +205,7 @@ class Level2 extends Play {
         game.canvas.oncontextmenu = function (e) { e.preventDefault(); }
         this.add.sprite(0,0,'sky');
         this.add.sprite(200,80,'speechBubble'); 
-        this.bubbleText = game.add.text(220, 110, "", { font: "15px Calibri", fill: "#000", align: "center", });
+        this.bubbleText = game.add.text(220, 110, "Batteries supply voltage.", { font: "15px Calibri", fill: "#000", align: "center", });
         //ROBOT STUFF
         this.makeRobot();
         //make an UNDIRECTED GRAAAAAPH!!!!
@@ -78,7 +229,7 @@ class Level2 extends Play {
         this.downArrow;
         
         this.createConditions();        
-        this.targetCurrent = 2; //amperes
+        this.targetCurrent = 1; //amperes
   }
     
     createCircuit() {
@@ -92,7 +243,7 @@ class Level2 extends Play {
     }
 }
 
-class Level3 extends Level2 {
+class Level6 extends Level5 {
     constructor () {
         super();
     }
@@ -121,13 +272,13 @@ class Level3 extends Level2 {
         this.createButtons();
         this.initEdges();
         
-        this.bubbleText = game.add.text(220, 110, "", { font: "15px Calibri", fill: "#000", align: "center", });
+        this.bubbleText = game.add.text(220, 110, "Resistance is measured in Ohms.", { font: "15px Calibri", fill: "#000", align: "center", });
         
         this.upArrow;
         this.downArrow;
         
         this.createConditions();        
-        this.targetCurrent = 2; //amperes
+        this.targetCurrent = 1; //amperes
 
   }
     createCircuit() {
@@ -152,21 +303,21 @@ class Level3 extends Level2 {
         
         this.resistor1 = new Resistor(200, 450, this, 'circuitResistor', 10);
         addToState(this, this.resistor1);
-        this.resistor2 = new Resistor(350, 450, this, 'circuitResistor', 20);
+        this.resistor2 = new Resistor(350, 450, this, 'circuitResistor', 15);
         addToState(this, this.resistor2);
         this.createResistor();
     }
     
     createResistor() {
         this.resistorLabel1 = new displayText(this.game, this.resistor1.x - 20, this.resistor1.y - 30, "Resistance:");
-        this.resistorText1 = new displayText(this.game, this.resistor1.x, this.resistor1.y - 10, this.resistor1.resistance + "Ohms");
+        this.resistorText1 = new displayText(this.game, this.resistor1.x, this.resistor1.y - 10, this.resistor1.resistance + " Ohms");
         
         this.resistorLabel2 = new displayText(this.game, this.resistor2.x - 20, this.resistor2.y - 30, "Resistance:");
-        this.resistorText2 = new displayText(this.game, this.resistor2.x, this.resistor2.y - 10, this.resistor2.resistance + 100 + "Ohms");
+        this.resistorText2 = new displayText(this.game, this.resistor2.x, this.resistor2.y - 10, this.resistor2.resistance + " Ohms");
     }
 
 }
-class Level4 extends Level3 {
+class Level7 extends Level6 {
     constructor () {
         super();
     }
@@ -192,7 +343,7 @@ class Level4 extends Level3 {
         addPipes(this);
         this.createCircuit();
         this.add.sprite(200,80,'speechBubble'); 
-        this.bubbleText = game.add.text(220, 110, "", { font: "15px Calibri", fill: "#000", align: "center", });
+        this.bubbleText = game.add.text(220, 105, 'Get near 0.3 amps without burning the bulb. \n Volts = Current / Resistance', { font: "15px Calibri", fill: "#000", align: "center", });
         this.setToolbox();
         this.createButtons();
         this.createLED();
@@ -202,7 +353,7 @@ class Level4 extends Level3 {
         this.downArrow;
         
         this.createConditions();       
-        this.targetCurrent = 2; //amperes
+        this.targetCurrent = 0.3; //amperes
 
   }
     createCircuit() {
@@ -211,8 +362,25 @@ class Level4 extends Level3 {
     }
     
     createLED() {
+        this.robot.maxCurrent = 0.7;
         this.bulb = this.add.sprite(420,220,'bulb');
-        this.LEDLabel = new displayText(this.game, 400, this.bulb.y-15, "Max Current: 15amps");
-        this.LEDText = new displayText(this.game, 500, 290, "0amps");
+        this.LEDLabel = new displayText(this.game, 400, this.bulb.y-15, "Max Current: " + this.robot.maxCurrent  + " amps");
+        this.LEDText = new displayText(this.game, 500, 290, "0 amps");
+    }
+}
+class Level8 extends Level7 {
+    constructor () {
+        super();
+    }
+    
+    setVictory() {
+        this.bubbleText.text = "CONGRATS!!!";
+        this.nextButton.visible = false;
+        this.resetButton.visible = false;
+        
+        this.surveyButton = game.add.button(100, 170, 'survey', function() {   window.open("http://www.google.com", "_blank");}, this, 1, 0, 1);
+        this.surveyButton.input.useHandCursor = true;
+        
+        this.input = game.add.inputField(10, 90);
     }
 }

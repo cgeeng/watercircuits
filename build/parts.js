@@ -191,11 +191,11 @@ var Sink = (function (_Phaser$Sprite6) {
 var Robot = (function (_Phaser$Sprite7) {
     _inherits(Robot, _Phaser$Sprite7);
 
-    function Robot(x, y, state) {
+    function Robot(x, y, state, spritesheet) {
         _classCallCheck(this, Robot);
 
-        _get(Object.getPrototypeOf(Robot.prototype), 'constructor', this).call(this, game, x, y, 'robot1');
-        this.maxCurrent = 2; //amps
+        _get(Object.getPrototypeOf(Robot.prototype), 'constructor', this).call(this, game, x, y, spritesheet);
+        this.maxCurrent = 1.6; //amps
 
         this.animations.add('turningOn', [1, 2, 3, 4, 5, 6], 10, false);
         this.animations.add('on', [2, 3, 4, 3], 5, true);
@@ -225,7 +225,7 @@ function increaseVoltage(sprite, pointer) {
     var pump = this.pump;
     if (pump.voltage <= 20) {
         pump.scale.setTo(pump.scale.x + 0.05, pump.scale.y + 0.05);
-        pump.voltage += 2;
+        pump.voltage += 1;
     }
     if (this.voltageText != null) this.voltageText.text = pump.voltage + "V";
 }
@@ -234,7 +234,7 @@ function decreaseVoltage(sprite, pointer) {
     var pump = this.pump;
     if (pump.voltage >= 2.1) {
         pump.scale.setTo(pump.scale.x - 0.05, pump.scale.y - 0.05);
-        pump.voltage -= 2;
+        pump.voltage -= 1;
     }
     if (this.voltageText != null) this.voltageText.text = pump.voltage + "V";
 }
@@ -266,8 +266,8 @@ function setCurrent(state, resistance) {
 function animatePipes(state) {
 
     //music
-    state.water.play();
-    state.water.mute = false;
+    //state.water.play();
+    //state.water.mute = false;
 
     var pipes = state.pipes;
     var robot = state.robot;
@@ -291,30 +291,40 @@ function animatePipes(state) {
         //Animate robot shit
         if (current <= robot.maxCurrent / 8) {
             state.robot.frame = 1;
-            state.heart.frame = 1;
+            //state.heart.frame = 1;
             state.bubble.visible = false;
-        } else if (current > robot.maxCurrent) {
+        } else if (current >= robot.maxCurrent) {
             state.robot.animations.play('die');
-            state.heart.frame = 5;
+            //state.heart.frame = 5;
             state.bubble.visible = false;
+            //state.resetButton.visible = true;
         } else if (current <= robot.maxCurrent) {
-            state.robot.animations.play('on');
-            state.bubble.animations.play('on');
-            state.bubble.visible = true;
-            if (current <= robot.maxCurrent / 4) state.heart.frame = 2;else if (current <= robot.maxCurrent / 2) state.heart.frame = 3;else if (current <= 3 * robot.maxCurrent / 4) state.heart.frame = 4;
+                state.robot.animations.play('on');
+                state.bubble.animations.play('on');
+                state.bubble.visible = true;
+                /*
+                if (current <= robot.maxCurrent/4) state.heart.frame = 2;
+                else if (current <= robot.maxCurrent/2) state.heart.frame = 3;
+                else if (current <= 3*robot.maxCurrent/4) state.heart.frame = 4;
+                */
 
-            console.log(current);
-            //console.log(mapCurrent(current));
-            state.robot.animations.currentAnim.speed = mapCurrent(current);
-            state.bubble.animations.currentAnim.speed = mapCurrent(current);
-        } else {
-            state.robot.animations.play('turningOn');
-            state.robot.animations.currentAnim.speed = 10;
-        }
+                console.log(current);
+                //console.log(mapCurrent(current));
+                state.robot.animations.currentAnim.speed = mapCurrent(current);
+                state.bubble.animations.currentAnim.speed = mapCurrent(current);
+            } else {
+                state.robot.animations.play('turningOn');
+                state.robot.animations.currentAnim.speed = 10;
+            }
     }
+    //Heart shit
+    if (state.heart != null) {
+        if (current >= state.targetCurrent * 1.5) state.heart.frame = 5;else if (current >= state.targetCurrent * 1.25) state.heart.frame = 4;else if (current >= state.targetCurrent) state.heart.frame = 3;else if (current >= 3 * state.targetCurrent / 4) state.heart.frame = 2;else state.heart.frame = 1;
+    }
+
     //lightbulb
     if (state.bulb != null) {
-        if (current > robot.maxCurrent) state.bulb.frame = 5;else if (current <= robot.maxCurrent / 8) state.bulb.frame = 1;else if (current <= robot.maxCurrent / 4) state.bulb.frame = 2;else if (current <= robot.maxCurrent / 2) state.bulb.frame = 3;else if (current <= 3 * robot.maxCurrent / 4) state.bulb.frame = 4;
+        if (current >= state.robot.maxCurrent) state.bulb.frame = 5;else if (current >= state.targetCurrent) state.bulb.frame = 4;else if (current >= 3 * state.targetCurrent / 4) state.bulb.frame = 3;else if (current >= state.targetCurrent / 2) state.bulb.frame = 2;else state.bulb.frame = 1;
     }
 }
 

@@ -15,3 +15,9 @@ bugs
 
     -corners are still considered connected
     
+    Level 1: just mill
+    Level 2: just volt
+    Level 3: volt but overflows, R2
+    Level 4: just resistors, R2 (play)
+    Level 5: Voltage Circuitry
+    

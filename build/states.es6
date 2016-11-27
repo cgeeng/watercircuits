@@ -20,6 +20,7 @@ class Boot extends Phaser.State {
         game.load.image('robot', 'resources/assets/bg/robot.png');
         
         game.load.spritesheet('robot1', 'resources/assets/robot1sheet.png', 700, 500);
+        game.load.spritesheet('robot2', 'resources/assets/robot2sheet.png', 700, 500);
         game.load.spritesheet('heart', 'resources/assets/heartsheet.png', 700, 500);
         game.load.spritesheet('bubble', 'resources/assets/bubblesheet.png', 700, 167);
         
@@ -36,6 +37,10 @@ class Boot extends Phaser.State {
         
         game.load.spritesheet('exit', 'resources/assets/ui/exit.png', 50, 50);
         game.load.spritesheet('arrow', 'resources/assets/ui/arrowsheet.png', 50, 50);
+        game.load.spritesheet('next', 'resources/assets/ui/nextsheet.png', 418, 72);
+        game.load.spritesheet('reset', 'resources/assets/ui/resetsheet.png', 220, 72);
+        game.load.spritesheet('survey', 'resources/assets/ui/surveysheet.png', 500, 72);
+
         
         game.load.audio('water', 'resources/assets/sound/water.wav');
         game.load.spritesheet('figure', 'resources/assets/figuresheet.png', 74, 93);
@@ -68,31 +73,51 @@ class LevelSelect extends Phaser.State {
         this.level1.input.useHandCursor = true;
         this.level1.events.onInputUp.add(function() {
             this.destroy();
-            game.state.start('Level0');} , this);
+            game.state.start('Level1');} , this);
         this.level2 = new RainbowText(this.game, 250, 300, "Level 2");
         this.level2.inputEnabled = true;
         this.level2.input.useHandCursor = true;
         this.level2.events.onInputUp.add(function() {
             this.destroy();
-            game.state.start('Play');} , this);
+            game.state.start('Level2');} , this);
         this.level3 = new RainbowText(this.game, 250, 350, "Level 3");
         this.level3.inputEnabled = true;
         this.level3.input.useHandCursor = true;
         this.level3.events.onInputUp.add(function() {
             this.destroy();
-            game.state.start('Level2');} , this);
-        this.level4 = new RainbowText(this.game, 450, 250, "Level 4");
+            game.state.start('Level3');} , this);
+        this.level4 = new RainbowText(this.game, 250, 400, "Level 4");
         this.level4.inputEnabled = true;
         this.level4.input.useHandCursor = true;
         this.level4.events.onInputUp.add(function() {
             this.destroy();
-            game.state.start('Level3');} , this);
-        this.level5 = new RainbowText(this.game, 450, 300, "Level 5");
+            game.state.start('Level4');} , this);
+        this.level5 = new RainbowText(this.game, 450, 250, "Level 5");
         this.level5.inputEnabled = true;
         this.level5.input.useHandCursor = true;
         this.level5.events.onInputUp.add(function() {
             this.destroy();
-            game.state.start('Level4');} , this);
+            game.state.start('Level5');} , this);
+        this.level6 = new RainbowText(this.game, 450, 300, "Level 6");
+        this.level6.inputEnabled = true;
+        this.level6.input.useHandCursor = true;
+        this.level6.events.onInputUp.add(function() {
+            this.destroy();
+            game.state.start('Level6');} , this);
+        this.level7 = new RainbowText(this.game, 450, 350, "Level 7");
+        this.level7.inputEnabled = true;
+        this.level7.input.useHandCursor = true;
+        this.level7.events.onInputUp.add(function() {
+            this.destroy();
+            game.state.start('Level7');} , this);
+        
+        this.level8 = new RainbowText(this.game, 450, 400, "Level 8");
+        this.level8.inputEnabled = true;
+        this.level8.input.useHandCursor = true;
+        this.level8.events.onInputUp.add(function() {
+            this.destroy();
+            game.state.start('Level8');} , this);
+            
     }
     
     goToLevel() {
@@ -105,12 +130,14 @@ class LevelSelect extends Phaser.State {
         this.level3.destroy();
         this.level4.destroy();
         this.level5.destroy();
+        this.level6.destroy();
+        this.level7.destroy();
+        this.level8.destroy();
     }
 }
 //Gameplay state
 class Play extends Phaser.State {
-
-    back() {
+    destroyThings() {
         if (this.voltageText != null) {
             this.voltageText.destroy();
             this.voltageLabel.destroy();
@@ -128,8 +155,14 @@ class Play extends Phaser.State {
             this.LEDText.destroy();
             this.LEDLabel.destroy();
         }
+        if (this.bubbleText != null) {
+            this.bubbleText.destroy();
+        }
         this.water.destroy();
         this.victoryText.destroy();
+    }
+    back() {
+        this.destroyThings();
         game.state.start('LevelSelect');
     }
 
@@ -138,7 +171,7 @@ class Play extends Phaser.State {
     game.canvas.oncontextmenu = function (e) { e.preventDefault(); }
     this.add.sprite(0,0,'sky');
     this.add.sprite(200,80,'speechBubble');    
-    this.bubbleText = game.add.text(220, 110, "Reach this", { font: "15px Calibri", fill: "#000", align: "center", });
+    this.bubbleText = game.add.text(220, 110, "Hello.", { font: "15px Calibri", fill: "#000", align: "center", });
     //ROBOT STUFF
     this.makeRobot();
     //make an UNDIRECTED GRAAAAAPH!!!!
@@ -160,7 +193,7 @@ class Play extends Phaser.State {
     this.upArrow;
     this.downArrow;
 
-    this.targetCurrent = 0.8; //amperes        
+    this.targetCurrent = 1; //amperes        
     this.createConditions();    
 
   }
@@ -168,9 +201,11 @@ class Play extends Phaser.State {
         if ( this.pipes[0].isConnectedSink ) {
             //this.text.text = "WATER RUN";
             animatePipes(this);
-            if (this.mill.current == this.targetCurrent) {
-                this.setVictory();
-            }
+            if (this.targetCurrent != null) {
+                if (this.mill.current <= this.targetCurrent*1.25 && this.mill.current >= this.targetCurrent*0.75) this.setVictory();
+                else if (this.mill.current >= this.robot.maxCurrent) this.setFailure();
+            } else this.setVictory();
+
         } else {
             //this.text.text = "WATER NO RUN";
             stopAnimate(this);
@@ -193,7 +228,7 @@ class Play extends Phaser.State {
       
     }
     makeRobot() {
-        this.robot = new Robot(0,0, this); 
+        this.robot = new Robot(0,0, this, 'robot1'); 
         this.add.existing(this.robot);
         this.heart = this.add.sprite(0,0,'heart');
         this.bubble = this.add.sprite(0,0, 'bubble');
@@ -201,58 +236,72 @@ class Play extends Phaser.State {
         this.bubble.animations.add('on', [0,1, 2,3], 10, true);
     }
     setFailure() {
-        this.failureText = new displayText(this.game, 350, 250, "");
+        //this.failureText = new displayText(this.game, 350, 250, "");
+        this.bubbleText.text = "The robot overflowed...";
+        this.resetButton.visible = true;
+        this.nextButton.visible = false;
     }
     
     setVictory() {
         this.bubbleText.text = "CONGRATS!!!";
+        this.nextButton.visible = true;
+        this.resetButton.visible = false;
     }
     
     updateLabelPosition() {
         //Moves resistor labels to where resistor position is
     }
 
-    toggleCircuit() {
-    
-    if (this.circuit.alpha != 1) {
-        this.white.alpha = 0.8;
-        this.circuit.alpha = 1;
-        this.math.alpha = 1;
-        this.circuitButton.frame = 1;
-    } else {
-        this.white.alpha = 0;
-        this.circuit.alpha = 0;
-        this.circuitButton.frame = 0;
-        this.math.alpha = 0;
-    }
-        
-}
-createConditions() {
-    this.victoryText = new RainbowText(this.game, 350,150,"");
-    this.add.existing(this.victoryText);
-    
-    this.water = game.add.audio('water');
-    this.figure = game.add.sprite(620,150,'figure');
-    this.figure.animations.add('blink', [0,1], 0.5, true);
-    this.figure.animations.play('blink');
-    
-    this.bubbleText.text = "Careful not to run it too fast."
-    
-}
-createButtons() {
-    //buttons
-    this.exit = game.add.button(10, 10, 'exit', this.back, this, 1, 0);
+    createConditions() {
+        this.victoryText = new RainbowText(this.game, 350,150,"");
+        this.add.existing(this.victoryText);
 
-    this.upArrow = game.add.button(150, 250, 'arrow', increaseVoltage, this, 1, 0, 3);
-    this.upArrow.input.useHandCursor = true;
-    
-    this.downArrow = game.add.button(50, 250, 'arrow', decreaseVoltage, this, 1, 0, 3);
-    this.downArrow.input.useHandCursor = true;
-    this.downArrow.anchor.setTo(1, 1);
-    this.downArrow.angle += 180;
-    
-}
-    
+        this.water = game.add.audio('water');
+        this.figure = game.add.sprite(620,150,'figure');
+        this.figure.animations.add('blink', [0,1], 0.5, true);
+        this.figure.animations.play('blink');
+
+    }
+    goNextLevel() {
+        this.destroyThings();
+        if (this.key == 'Level1') game.state.start('Level2');
+        else if (this.key == 'Level2') game.state.start('Level3');
+        else if (this.key == 'Level3') game.state.start('Level4');
+        else if (this.key == 'Level4') game.state.start('Level5');
+        else if (this.key == 'Level5') game.state.start('Level6');
+        else if (this.key == 'Level6') game.state.start('Level7');
+        else if (this.key == 'Level7') game.state.start('Level8');
+    }
+    levelReset(){
+        this.destroyThings();
+        game.state.start(this.key);
+        
+    }
+    createButtons() {
+        //buttons
+        this.exit = game.add.button(10, 10, 'exit', this.back, this, 1, 0);
+
+        this.upArrow = game.add.button(150, 250, 'arrow', increaseVoltage, this, 1, 0, 3);
+        this.upArrow.input.useHandCursor = true;
+
+        this.downArrow = game.add.button(50, 250, 'arrow', decreaseVoltage, this, 1, 0, 3);
+        this.downArrow.input.useHandCursor = true;
+        this.downArrow.anchor.setTo(1, 1);
+        this.downArrow.angle += 180;
+
+
+        this.nextButton = game.add.button(100, 170, 'next', this.goNextLevel, this, 1, 0, 1);
+        this.nextButton.input.useHandCursor = true;
+        this.nextButton.visible = false;
+        
+        this.resetButton = game.add.button(150, 170, 'reset', this.levelReset, this, 1, 0, 1);
+        this.resetButton.input.useHandCursor = true;
+        this.resetButton.visible = false;
+        
+        this.levelText = game.add.text(60, 20, this.key, { font: "20px Calibri", fill: "#000", align: "center", });
+
+    }
+
 setToolbox() {
     this.add.sprite(0,0,'overlay');
     let draggable = new Pipe(40, 425, this, 'pipeh', true);
@@ -264,7 +313,7 @@ setToolbox() {
     addToState(this, draggable2);
     
     addToState(this, new Resistor(200, 425, this, 'resistor', 10));
-    addToState(this, new Resistor(350, 425, this, 'resistor2', 20));
+    addToState(this, new Resistor(350, 425, this, 'resistor2', 15));
 }
 
 initEdges() {    
@@ -286,7 +335,7 @@ initEdges() {
     this.g.removeEdge(1,0);
     this.setConnectedToSource();
     this.setConnectedToSink();
-    console.log("edges initialized");
+    //console.log("edges initialized");
 }
 
 
