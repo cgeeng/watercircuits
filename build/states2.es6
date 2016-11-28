@@ -136,7 +136,7 @@ class Level3 extends Level2 {
     makeRobot() {
         this.robot = new Robot(0,0, this, 'robot2'); 
         this.add.existing(this.robot);
-        this.heart = this.add.sprite(0,0,'heart');
+        this.heart = this.add.sprite(505,220,'heart');
         this.bubble = this.add.sprite(0,0, 'bubble');
         this.bubble.visible = false;
         this.bubble.animations.add('on', [0,1, 2,3], 10, true);
@@ -447,7 +447,15 @@ class Level8 extends Level7 {
 
         this.resistor1 = new Resistor(200, 400, this, 'circuitResistor', 10);
         addToState(this, this.resistor1);
-        this.createResistor();
+        
+        this.resistor2 = new Resistor(380, 450, this, 'circuitResistor', 10);
+        addToState(this, this.resistor2);
+        this.resistor3 = new Resistor(500, 450, this, 'circuitResistor', 15);
+        addToState(this, this.resistor3);
+        this.resistor2.inputEnabled = false;
+        this.resistor3.inputEnabled = false;
+        
+                this.createResistor();
     }
     
     createResistor() {
@@ -463,6 +471,12 @@ class Level8 extends Level7 {
             placeHolder: 'Resistance',
         });
         this.resistorText1 = new displayText(this.game, this.resistorLabel1.x + 100, this.resistorLabel1.y+3, " Ohms");
+        
+        this.resistorLabel2 = new displayText(this.game, this.resistor2.x - 20, this.resistor2.y - 30, "Resistance:");
+        this.resistorText2 = new displayText(this.game, this.resistor2.x, this.resistor2.y - 10, this.resistor2.resistance + " Ohms");
+        
+        this.resistorLabel3 = new displayText(this.game, this.resistor3.x - 20, this.resistor3.y - 30, "Resistance:");
+        this.resistorText3 = new displayText(this.game, this.resistor3.x, this.resistor3.y - 10, this.resistor3.resistance + " Ohms");
 
     }
     

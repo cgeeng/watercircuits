@@ -13,7 +13,7 @@ var Game = (function (_Phaser$Game) {
       function Game() {
             _classCallCheck(this, Game);
 
-            _get(Object.getPrototypeOf(Game.prototype), 'constructor', this).call(this, 700, 500, Phaser.AUTO, 'content', null, false, false);
+            _get(Object.getPrototypeOf(Game.prototype), 'constructor', this).call(this, 700, 500, Phaser.CANVAS, 'content', null, false, false);
             this.state.add('Boot', Boot, false);
             this.state.add('LevelSelect', LevelSelect, false);
             this.state.add('Play', Play, false);

@@ -22,6 +22,7 @@ var Boot = (function (_Phaser$State) {
     _createClass(Boot, [{
         key: 'preload',
         value: function preload() {
+            this.text = new RainbowText(this.game, 200, 200, "Loading...");
             game.load.image('source', 'resources/assets/source.png');
             game.load.image('sink', 'resources/assets/sink.png');
             game.load.image('elbow1', 'resources/assets/elbow1.png');
@@ -41,7 +42,7 @@ var Boot = (function (_Phaser$State) {
 
             game.load.spritesheet('robot1', 'resources/assets/robot1sheet.png', 700, 500);
             game.load.spritesheet('robot2', 'resources/assets/robot2sheet.png', 700, 500);
-            game.load.spritesheet('heart', 'resources/assets/heartsheet.png', 700, 500);
+            game.load.spritesheet('heart', 'resources/assets/heart2.png', 81, 68);
             game.load.spritesheet('bubble', 'resources/assets/bubblesheet.png', 700, 167);
 
             //UI stuff
@@ -69,8 +70,9 @@ var Boot = (function (_Phaser$State) {
     }, {
         key: 'create',
         value: function create() {
+            this.text.destroy();
             var center = { x: this.game.world.centerX, y: this.game.world.centerY };
-            this.text = new RainbowText(this.game, center.x, center.y, "play play");
+            this.text = new RainbowText(this.game, center.x, center.y, "Play");
             //text.anchor.set(0.5);
             //On click will switch states.
             this.text.inputEnabled = true;
@@ -219,6 +221,10 @@ var Play = (function (_Phaser$State3) {
             if (this.resistorText != null) {
                 this.resistorText.destroy();
             }
+            if (this.resistorText3 != null) {
+                this.resistorText3.destroy();
+                this.resistorLabel3.destroy();
+            }
             this.water.destroy();
             this.victoryText.destroy();
         }
@@ -271,7 +277,11 @@ var Play = (function (_Phaser$State3) {
                 if (this.targetCurrent != null && this.key != "Level8") {
                     if (this.mill.current <= this.targetCurrent * 1.25 && this.mill.current >= this.targetCurrent * 0.75) this.setVictory();else if (this.mill.current >= this.robot.maxCurrent) this.setFailure();
                 } else if (this.targetCurrent != null && this.key == "Level8") {
+                    //Level 8 requires a specific amp
                     if (this.mill.current == this.targetCurrent) this.setVictory();else if (this.mill.current >= this.robot.maxCurrent) this.setFailure();
+                } else if (this.key == "Level1") {
+                    //Level 8 requires a specific amp
+                    this.setVictory();
                 }
             } else {
                 //this.text.text = "WATER NO RUN";
@@ -313,7 +323,7 @@ var Play = (function (_Phaser$State3) {
         value: function makeRobot() {
             this.robot = new Robot(0, 0, this, 'robot1');
             this.add.existing(this.robot);
-            this.heart = this.add.sprite(0, 0, 'heart');
+            this.heart = this.add.sprite(515, 213, 'heart');
             this.bubble = this.add.sprite(0, 0, 'bubble');
             this.bubble.visible = false;
             this.bubble.animations.add('on', [0, 1, 2, 3], 10, true);
