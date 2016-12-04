@@ -32,6 +32,7 @@ var Pipe = (function (_Phaser$Sprite) {
 
         //Drag functions
         this.inputEnabled = true;
+        this.draggable = draggable;
         if (draggable) this.input.enableDrag();
         this.input.enableSnap(WIDTH / 2, HEIGHT / 2, false, true);
         this.events.onDragStop.add(state.updateConnection, state);
@@ -129,6 +130,8 @@ var Resistor = (function (_Phaser$Sprite4) {
         this.inputEnabled = true;
         this.input.useHandCursor = true;
         this.input.enableDrag();
+        //below is merely a note for me
+        this.draggable = true;
         this.input.enableSnap(WIDTH / 2, HEIGHT / 2, false, true);
         this.events.onDragStop.add(state.updateConnection, state);
 
@@ -407,4 +410,20 @@ function addToState(state, thing) {
     state.pipes.push(thing);
     state.add.existing(thing);
     state.g.setNode('' + thing.id, thing);
+}
+
+function checkCompletion(state) {
+    var p1 = state.pipes[state.pipes.length - 1];
+    var p2 = state.pipes[state.pipes.length - 2];
+    var higherLevel = false;
+    var p3 = state.pipes[state.pipes.length - 3];
+    var p4 = state.pipes[state.pipes.length - 4];
+
+    if (p3.draggable) {
+        higherLevel = p3.position.y == 175 && p3.position.x + 100 == 350 || p3.position.y == 175 && p4.position.y == 175 || p4.position.y == 175 && p4.position.x + 100 == 350;
+        //console.log(higherLevel);
+    }
+    //console.log("p3 is " + p3.position.x + " and y is " + p3.position.y);
+    //console.log("p4 is " + p4.position.x + " and y is " + p4.position.y);
+    return p1.position.y == 175 && p1.position.x + 100 == 350 || p1.position.y == 175 && p2.position.y == 175 || p2.position.y == 175 && p2.position.x + 100 == 350 || higherLevel;
 }

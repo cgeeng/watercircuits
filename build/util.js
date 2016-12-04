@@ -3,7 +3,7 @@
 function pointInRect(p, rect) {
     return p.x >= rect.x && p.x < rect.x + rect.w && p.y >= rect.y && p.y < rect.y + rect.h;
 }
-
+let buffer = 26;
 function intersects(r1, r2) {
     //console.log(r1.position.x + " and " + r1.position.y);
     //return !(r2.x > r1.x + r1.w || r2.x + r2.w < r1.x || r2.y > r1.y + r1.h || r2.y + r2.h < r1.y);
@@ -16,6 +16,7 @@ function intersects(r1, r2) {
     return !(r2.position.x > r1.position.x + r1.w || r2.position.x + r2.w < r1.position.x || r2.position.y > r1.position.y + r1.h || r2.position.y + r2.h < r1.position.y);
 }
 */
+
 
 function clipToRect(upperLeftPos, itemSize, clipOrigin, clipSize) {
     var q = clonePos(upperLeftPos);

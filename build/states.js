@@ -65,6 +65,7 @@ var Boot = (function (_Phaser$State) {
 
             game.load.audio('water', 'resources/assets/sound/water.wav');
             game.load.spritesheet('figure', 'resources/assets/figuresheet.png', 74, 93);
+            game.load.spritesheet('indicator', 'resources/assets/ui/indicatorsheet.png', 50, 50);
             game.load.image('speechBubble', 'resources/assets/speechbubble.png');
         }
     }, {
@@ -271,7 +272,7 @@ var Play = (function (_Phaser$State3) {
     }, {
         key: 'update',
         value: function update() {
-            if (this.pipes[0].isConnectedSink) {
+            if (this.pipes[0].isConnectedSink && checkCompletion(this)) {
                 //this.text.text = "WATER RUN";
                 animatePipes(this);
                 if (this.targetCurrent != null && this.key != "Level8") {
@@ -327,6 +328,20 @@ var Play = (function (_Phaser$State3) {
             this.bubble = this.add.sprite(0, 0, 'bubble');
             this.bubble.visible = false;
             this.bubble.animations.add('on', [0, 1, 2, 3], 10, true);
+            this.makeIndicator();
+        }
+    }, {
+        key: 'makeIndicator',
+        value: function makeIndicator() {
+            if (this.robot.key == 'robot2') {
+                //this.indicator = this.add.sprite(575,228, 'indicator');
+                //this.indicator.animations.add('move', [0,1, 2,3,4], 8, true);
+                this.indicator.animations.play('move');
+            } else if (this.robot.key == 'robot1') {
+                this.indicator = this.add.sprite(585, 222, 'indicator');
+                this.indicator.animations.add('move', [0, 1, 2, 3, 4], 8, true);
+                this.indicator.animations.play('move');
+            }
         }
     }, {
         key: 'setFailure',
@@ -347,6 +362,11 @@ var Play = (function (_Phaser$State3) {
         key: 'updateLabelPosition',
         value: function updateLabelPosition() {
             //Moves resistor labels to where resistor position is
+        }
+    }, {
+        key: 'checkCompletion',
+        value: function checkCompletion() {
+            return true;
         }
     }, {
         key: 'createConditions',

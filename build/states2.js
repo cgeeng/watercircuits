@@ -195,6 +195,20 @@ var Level3 = (function (_Level2) {
             this.bubble.animations.add('on', [0, 1, 2, 3], 10, true);
             this.robot.maxCurrent = 0.6;
             this.bubbleText.text = "This robot can't take much water.";
+            this.makeIndicator();
+        }
+    }, {
+        key: 'makeIndicator',
+        value: function makeIndicator() {
+            if (this.robot.key == 'robot2') {
+                this.indicator = this.add.sprite(575, 228, 'indicator');
+                this.indicator.animations.add('move', [0, 1, 2, 3, 4], 8, true);
+                this.indicator.animations.play('move');
+            } else if (this.robot.key == 'robot1') {
+                this.indicator = this.add.sprite(585, 222, 'indicator');
+                this.indicator.animations.add('move', [0, 1, 2, 3, 4], 8, true);
+                this.indicator.animations.play('move');
+            }
         }
     }]);
 
