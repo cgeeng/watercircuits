@@ -269,8 +269,14 @@ function animatePipes(state) {
         else if ( current >= state.targetCurrent*1.25) state.heart.frame = 5;
         else if ( current >= state.targetCurrent) state.heart.frame = 4;
         else if ( current >= 3*state.targetCurrent/4) state.heart.frame = 3;
-        else if ( current >= state.targetCurrent/2) state.heart.frame = 2;
-        else state.heart.frame = 1;        
+        else if ( current >= state.targetCurrent/2) {
+            state.heart.frame = 2;
+            state.bubbleText.text = "That is way too little power.";
+        }
+        else {
+            state.heart.frame = 1;
+            state.bubbleText.text = "That is way too little power.";
+        }
     }
     
     //lightbulb
@@ -307,6 +313,7 @@ function stopAnimate(state) {
     
     //lightbulb
     if (state.bulb != null) state.bulb.frame = 0;
+    state.bubbleText.text = state.defaultText;
     
 }
 

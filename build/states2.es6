@@ -10,7 +10,7 @@ class Level1 extends Play {
         this.add.sprite(0,0,'overlay');
         this.add.sprite(200,80,'speechBubble'); 
         this.bubbleText = game.add.text(220, 110, "Hello.", { font: "15px Calibri", fill: "#000", align: "center", });
-
+        this.defaultText = this.bubbleText.text;
         //make an UNDIRECTED GRAAAAAPH!!!!
         this.g = new graphlib.Graph({ directed: false}); //{ directed: false}
         this.pipeCount = 2; //accounts for source and sink; 0 = source, 1 = sink  
@@ -54,6 +54,7 @@ class Level2 extends Play {
     this.add.sprite(0,0,'overlay');
     this.add.sprite(200,80,'speechBubble');    
     this.bubbleText = game.add.text(220, 105, 'The robot-bubble-machine runs \n on water.', { font: "15px Calibri", fill: "#000", align: "center", });
+    this.defaultText = this.bubbleText.text;
     //ROBOT STUFF
     this.makeRobot();
     //make an UNDIRECTED GRAAAAAPH!!!!
@@ -99,6 +100,7 @@ class Level3 extends Level2 {
     this.add.sprite(0,0,'overlay');
     this.add.sprite(200,80,'speechBubble');    
     this.bubbleText = game.add.text(220, 110, "Hello.", { font: "15px Calibri", fill: "#000", align: "center", });
+    this.defaultText = this.bubbleText.text;
     //ROBOT STUFF
     this.makeRobot();
     //make an UNDIRECTED GRAAAAAPH!!!!
@@ -166,6 +168,7 @@ class Level4 extends Level3 {
     this.add.sprite(0,0,'overlay');
     this.add.sprite(200,80,'speechBubble');    
     this.bubbleText = game.add.text(220, 110, "This robot can't take much water.", { font: "15px Calibri", fill: "#000", align: "center", });
+    this.defaultText = this.bubbleText.text;
     //ROBOT STUFF
     this.makeRobot();
     //make an UNDIRECTED GRAAAAAPH!!!!
@@ -219,6 +222,7 @@ class Level5 extends Play {
         this.add.sprite(0,0,'sky');
         this.add.sprite(200,80,'speechBubble'); 
         this.bubbleText = game.add.text(220, 110, "Batteries supply voltage.", { font: "15px Calibri", fill: "#000", align: "center", });
+        this.defaultText = this.bubbleText.text;
         //ROBOT STUFF
         this.makeRobot();
         //make an UNDIRECTED GRAAAAAPH!!!!
@@ -286,7 +290,7 @@ class Level6 extends Level5 {
         this.initEdges();
         
         this.bubbleText = game.add.text(220, 110, "Resistance is measured in Ohms.", { font: "15px Calibri", fill: "#000", align: "center", });
-        
+        this.defaultText = this.bubbleText.text;
         this.upArrow;
         this.downArrow;
         
@@ -357,6 +361,7 @@ class Level7 extends Level6 {
         this.createCircuit();
         this.add.sprite(200,80,'speechBubble'); 
         this.bubbleText = game.add.text(220, 105, 'Get near 0.3 amps without burning the bulb. \n Volts = Current * Resistance', { font: "15px Calibri", fill: "#000", align: "center", });
+        this.defaultText = this.bubbleText.text;
         this.setToolbox();
         this.createButtons();
         this.createLED();
@@ -408,6 +413,7 @@ class Level8 extends Level7 {
         this.add.sprite(200,80,'speechBubble'); 
                 this.targetCurrent = 2; //amperes
         this.bubbleText = game.add.text(220, 105, 'Get ' + this.targetCurrent + ' amps without burning the bulb. \n Volts = Current * Resistance', { font: "15px Calibri", fill: "#000", align: "center", });
+        this.defaultText = this.bubbleText.text;
         this.setToolbox();
         this.createButtons();
         this.createLED();
@@ -452,7 +458,7 @@ class Level8 extends Level7 {
         this.nextButton.visible = false;
         this.resetButton.visible = false;
         
-        this.surveyButton = game.add.button(100, 170, 'survey', function() {   window.open("http://www.google.com", "_blank");}, this, 1, 0, 1);
+        this.surveyButton = game.add.button(100, 170, 'survey', function() {   window.open("https://cornell.qualtrics.com/SE/?SID=SV_enRJpvq1orVFvvv", "_blank");}, this, 1, 0, 1);
         this.surveyButton.input.useHandCursor = true;
     }
     setToolbox() {

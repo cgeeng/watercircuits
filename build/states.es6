@@ -53,6 +53,8 @@ class Boot extends Phaser.State {
 	create() {
         this.text.destroy();
 		let center = { x: this.game.world.centerX, y: this.game.world.centerY }
+        this.add.sprite(0,0,'sky');
+        let floor = new Phaser.Rectangle(0, 550, 800, 50);
 		this.text = new RainbowText(this.game, center.x, center.y, "Play");
 		//text.anchor.set(0.5);
         //On click will switch states.
@@ -183,6 +185,7 @@ class Play extends Phaser.State {
     this.add.sprite(0,0,'sky');
     this.add.sprite(200,80,'speechBubble');    
     this.bubbleText = game.add.text(220, 110, "Hello.", { font: "15px Calibri", fill: "#000", align: "center", });
+    this.defaultText = this.bubbleText.text;
     //ROBOT STUFF
     this.makeRobot();
     //make an UNDIRECTED GRAAAAAPH!!!!
