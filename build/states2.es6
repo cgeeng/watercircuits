@@ -9,7 +9,7 @@ class Level1 extends Play {
         this.add.sprite(0,0,'sky');
         this.add.sprite(0,0,'overlay');
         this.add.sprite(200,80,'speechBubble'); 
-        this.bubbleText = game.add.text(220, 110, "Hello.", { font: "15px Calibri", fill: "#000", align: "center", });
+        this.bubbleText = game.add.text(220, 110, "Connect the pipes!", { font: "15px Calibri", fill: "#000", align: "center", });
         this.defaultText = this.bubbleText.text;
         //make an UNDIRECTED GRAAAAAPH!!!!
         this.g = new graphlib.Graph({ directed: false}); //{ directed: false}
