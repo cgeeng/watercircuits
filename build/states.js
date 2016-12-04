@@ -353,6 +353,8 @@ var Play = (function (_Phaser$State3) {
             this.bubbleText.text = "The robot overflowed...";
             this.resetButton.visible = true;
             this.nextButton.visible = false;
+            this.upArrow.inputEnabled = false;
+            this.downArrow.inputEnabled = false;
         }
     }, {
         key: 'setVictory',

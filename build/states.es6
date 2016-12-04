@@ -288,6 +288,8 @@ class Play extends Phaser.State {
         this.bubbleText.text = "The robot overflowed...";
         this.resetButton.visible = true;
         this.nextButton.visible = false;
+        this.upArrow.inputEnabled = false;
+        this.downArrow.inputEnabled = false;
     }
     
     setVictory() {

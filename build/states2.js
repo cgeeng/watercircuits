@@ -637,6 +637,8 @@ var Level8 = (function (_Level7) {
             this.bubbleText.text = 'Get ' + this.targetCurrent + ' Amps.\n 6 Volts = 2 Amps * Resistance';
             this.resetButton.visible = false;
             this.nextButton.visible = false;
+            this.upArrow.inputEnabled = false;
+            this.downArrow.inputEnabled = false;
         }
     }]);
 
