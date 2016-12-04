@@ -43,8 +43,6 @@ class Boot extends Phaser.State {
         game.load.spritesheet('reset', 'resources/assets/ui/resetsheet.png', 220, 72);
         game.load.spritesheet('survey', 'resources/assets/ui/surveysheet.png', 500, 72);
 
-        
-        game.load.audio('water', 'resources/assets/sound/water.wav');
         game.load.spritesheet('figure', 'resources/assets/figuresheet.png', 74, 93);
         game.load.spritesheet('indicator', 'resources/assets/ui/indicatorsheet.png', 50, 50);
         game.load.image('speechBubble', 'resources/assets/speechbubble.png');
@@ -171,7 +169,6 @@ class Play extends Phaser.State {
             this.resistorText3.destroy();
             this.resistorLabel3.destroy();
         }
-        this.water.destroy();
         this.victoryText.destroy();
     }
     back() {
@@ -309,7 +306,6 @@ class Play extends Phaser.State {
         this.victoryText = new RainbowText(this.game, 350,150,"");
         this.add.existing(this.victoryText);
 
-        this.water = game.add.audio('water');
         this.figure = game.add.sprite(620,150,'figure');
         this.figure.animations.add('blink', [0,1], 0.5, true);
         this.figure.animations.play('blink');

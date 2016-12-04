@@ -210,10 +210,7 @@ function setCurrent(state, resistance) {
 }
 
 function animatePipes(state) {
-            
-    //music
-    //state.water.play();
-    //state.water.mute = false;
+
     
     let pipes = state.pipes;
     let robot = state.robot;
@@ -291,7 +288,6 @@ function animatePipes(state) {
 }
 
 function stopAnimate(state) {
-    state.water.mute = true;
     let pipes = state.pipes;
     for (var i in pipes) {
         //I only have animation files for 2 types
