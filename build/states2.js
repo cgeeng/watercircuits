@@ -50,7 +50,7 @@ var Level1 = (function (_Play) {
             this.downArrow;
 
             this.createConditions();
-            this.bubbleText.text = "Get the water mill running.";
+            this.bubbleText.text = "Connect the pipes!";
             //this.targetCurrent = 1.5; //amperes
         }
     }, {
