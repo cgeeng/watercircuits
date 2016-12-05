@@ -99,7 +99,7 @@ class Level3 extends Level2 {
     this.add.sprite(0,0,'sky');
     this.add.sprite(0,0,'overlay');
     this.add.sprite(200,80,'speechBubble');    
-    this.bubbleText = game.add.text(220, 110, "Hello.", { font: "15px Calibri", fill: "#000", align: "center", });
+    this.bubbleText = game.add.text(220, 110, "This robot can't take much water.", { font: "15px Calibri", fill: "#000", align: "center", });
     this.defaultText = this.bubbleText.text;
     //ROBOT STUFF
     this.makeRobot();
@@ -467,9 +467,9 @@ class Level8 extends Level7 {
         this.resistor1 = new Resistor(200, 400, this, 'circuitResistor', 10);
         addToState(this, this.resistor1);
         
-        this.resistor2 = new Resistor(380, 450, this, 'circuitResistor', 10);
+        this.resistor2 = new Resistor(380, 450, this, 'brokenResistor', 10);
         addToState(this, this.resistor2);
-        this.resistor3 = new Resistor(500, 450, this, 'circuitResistor', 15);
+        this.resistor3 = new Resistor(500, 450, this, 'brokenResistor', 15);
         addToState(this, this.resistor3);
         this.resistor2.inputEnabled = false;
         this.resistor3.inputEnabled = false;

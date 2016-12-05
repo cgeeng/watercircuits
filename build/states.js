@@ -54,6 +54,7 @@ var Boot = (function (_Phaser$State) {
             game.load.image('cover3', 'resources/assets/circuit/cover3.png');
             game.load.image('cover4', 'resources/assets/circuit/cover4.png');
             game.load.image('circuitResistor', 'resources/assets/circuit/resistor.png');
+            game.load.image('brokenResistor', 'resources/assets/circuit/resistorbroken.png');
             game.load.image('wire', 'resources/assets/circuit/wire.png');
             game.load.spritesheet('bulb', 'resources/assets/circuit/bulbsheet.png', 100, 100);
 
@@ -273,6 +274,7 @@ var Play = (function (_Phaser$State3) {
     }, {
         key: 'update',
         value: function update() {
+
             if (this.pipes[0].isConnectedSink && checkCompletion(this)) {
                 //this.text.text = "WATER RUN";
                 animatePipes(this);
@@ -357,7 +359,7 @@ var Play = (function (_Phaser$State3) {
     }, {
         key: 'setVictory',
         value: function setVictory() {
-            this.bubbleText.text = "CONGRATS!!!";
+            this.bubbleText.text = "Congrats! The water mill runs!";
             this.nextButton.visible = true;
             this.resetButton.visible = false;
         }
